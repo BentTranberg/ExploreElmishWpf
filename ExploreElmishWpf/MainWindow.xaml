@@ -11,39 +11,35 @@
             <BooleanToVisibilityConverter x:Key="VisibilityConverter" />
         </ResourceDictionary>
     </Window.Resources>
-    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <StackPanel Margin="0,15,0,0">
-            <Button Command="{Binding ShowForm1}" Content="Show form 1" Width="200" Margin="0,5,0,5" />
-            <Button Command="{Binding ShowForm2}" Content="Show form 2" Width="200" Margin="0,5,0,5" />
-            <Button Command="{Binding ShowCounterPane}" Content="Show counter pane" Width="200" Margin="0,5,0,5" />
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <Button Command="{Binding ShowForm1}" Content="Show form 1" />
+            <Button Command="{Binding ShowForm2}" Content="Show form 2" />
+            <Button Command="{Binding ShowCounterPane}" Content="Show counter pane" />
         </StackPanel>
-        <Rectangle
-        Fill="Black"
-        Opacity="0.6"
-        Visibility="{Binding DialogVisible, Converter={StaticResource VisibilityConverter}}" />
-        <Border
-        BorderBrush="Black"
-        BorderThickness="2"
-        Width="480"
-        Height="200"
-        Visibility="{Binding DialogVisible, Converter={StaticResource VisibilityConverter}}">
-            <StackPanel Background="White">
-                <local:Form1
-                    DataContext="{Binding Form1}"
-                    Visibility="{Binding DataContext.Form1Visible,
-                        RelativeSource={RelativeSource AncestorType=Window},
-                        Converter={StaticResource VisibilityConverter}}" />
-                <local:Form2
-                    DataContext="{Binding Form2}"
-                    Visibility="{Binding DataContext.Form2Visible,
-                        RelativeSource={RelativeSource AncestorType=Window},
-                        Converter={StaticResource VisibilityConverter}}" />
-                <local:CounterPane
-                    DataContext="{Binding CounterPane}"
-                    Visibility="{Binding DataContext.CounterPaneVisible,
-                        RelativeSource={RelativeSource AncestorType=Window},
-                        Converter={StaticResource VisibilityConverter}}" />
-            </StackPanel>
-        </Border>
-    </Grid>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Rectangle Fill="LightSteelBlue"
+                        Visibility="{Binding NotPaneVisible, Converter={StaticResource VisibilityConverter}}" />
+                <StackPanel
+                        Visibility="{Binding PaneVisible, Converter={StaticResource VisibilityConverter}}">
+                    <local:Form1
+                            DataContext="{Binding Form1}"
+                            Visibility="{Binding DataContext.Form1Visible,
+                            RelativeSource={RelativeSource AncestorType=Window},
+                            Converter={StaticResource VisibilityConverter}}" />
+                    <local:Form2
+                            DataContext="{Binding Form2}"
+                            Visibility="{Binding DataContext.Form2Visible,
+                            RelativeSource={RelativeSource AncestorType=Window},
+                            Converter={StaticResource VisibilityConverter}}" />
+                    <local:CounterPane
+                            DataContext="{Binding CounterPane}"
+                            Visibility="{Binding DataContext.CounterPaneVisible,
+                            RelativeSource={RelativeSource AncestorType=Window},
+                            Converter={StaticResource VisibilityConverter}}" />
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </DockPanel>
 </Window>

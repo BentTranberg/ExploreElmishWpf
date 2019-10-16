@@ -60,7 +60,8 @@ module MainWindow =
             "ShowForm1" |> Binding.cmd ShowForm1
             "ShowForm2" |> Binding.cmd ShowForm2
             "ShowCounterPane" |> Binding.cmd ShowCounterPane
-            "DialogVisible" |> Binding.oneWay (fun m -> m.Pane.IsSome)
+            "PaneVisible" |> Binding.oneWay (fun m -> m.Pane.IsSome)
+            "NotPaneVisible" |> Binding.oneWay (fun m -> m.Pane.IsNone)
             "Form1Visible" |> Binding.oneWay
                 (fun m -> match m.Pane with Some (Form1 _) -> true | _ -> false)
             "Form2Visible" |> Binding.oneWay
