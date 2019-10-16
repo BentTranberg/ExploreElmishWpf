@@ -48,7 +48,6 @@ module MainWindow =
 
     let entryPoint (_: string[], mainWindow: Window) =
         Program.mkProgram init update bindings
-        |> Program.withConsoleTrace
         |> Program.runWindowWithConfig
-            { ElmConfig.Default with LogConsole = true; Measure = true }
+            { ElmConfig.Default with LogTrace = true; Measure = true; MeasureLimitMs = 1 }
             mainWindow
