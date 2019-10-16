@@ -5,13 +5,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExploreElmishWpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="120" Width="500">
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,25,0,0">
-        <TextBlock Text="{Binding CounterValue, StringFormat='Counter value: {0}'}" Width="110" Margin="0,5,10,5" />
-        <Button Command="{Binding Decrement}" Content="-" Margin="0,5,10,5" Width="30" />
-        <Button Command="{Binding Increment}" Content="+" Margin="0,5,10,5" Width="30" />
-        <TextBlock Text="{Binding StepSize, StringFormat='Step size: {0}'}" Width="70" Margin="0,5,10,5" />
-        <Slider Value="{Binding StepSize}" TickFrequency="1" Maximum="10" Minimum="1" IsSnapToTickEnabled="True" Width="100" Margin="0,5,10,5" />
-        <Button Command="{Binding Reset}" Content="Reset" Margin="0,5,10,5" Width="50" />
-    </StackPanel>
+        Title="MainWindow" Height="350" Width="500">
+    <Window.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="VisibilityConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <StackPanel Margin="0,15,0,0">
+            <Button Command="{Binding ShowForm1}" Content="Show form 1" Width="200" Margin="0,5,0,5" />
+            <Button Command="{Binding ShowForm2}" Content="Show form 2" Width="200" Margin="0,5,0,5" />
+        </StackPanel>
+        <Rectangle
+        Fill="Black"
+        Opacity="0.6"
+        Visibility="{Binding DialogVisible, Converter={StaticResource VisibilityConverter}}" />
+        <Border
+        BorderBrush="Black"
+        BorderThickness="2"
+        Width="350"
+        Height="200"
+        Visibility="{Binding DialogVisible, Converter={StaticResource VisibilityConverter}}">
+            <StackPanel Background="White">
+                <local:Form1
+                    DataContext="{Binding Form1}"
+                    Visibility="{Binding DataContext.Form1Visible,
+                        RelativeSource={RelativeSource AncestorType=Window},
+                        Converter={StaticResource VisibilityConverter}}" />
+                <local:Form2
+                    DataContext="{Binding Form2}"
+                    Visibility="{Binding DataContext.Form2Visible,
+                        RelativeSource={RelativeSource AncestorType=Window},
+                        Converter={StaticResource VisibilityConverter}}" />
+            </StackPanel>
+        </Border>
+    </Grid>
 </Window>

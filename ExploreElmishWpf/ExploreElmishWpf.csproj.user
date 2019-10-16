@@ -2,6 +2,26 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
+    <Compile Update="CounterPane.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Form1.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Form2.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="CounterPane.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Form1.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Form2.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
