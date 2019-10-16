@@ -6,4 +6,8 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ExploreElmishWpf.Models\ExploreElmishWpf.Models.fsproj" />
+  </ItemGroup>
+
 </Project>
