@@ -47,6 +47,12 @@ module CounterPane =
             "Close" |> Binding.cmd Close
         ]
 
-    let designTimeModel =
-        let model = { Count = 3; StepSize = 7 }
-        ViewModel.designInstance model (bindings ())
+    // d:DataContext="{x:Static vm:CounterPane.designTimeModel}"
+    let dtModel = { Count = 3; StepSize = 7 }
+    let dtBindings = bindings ()
+    let designTimeModel = ViewModel.designInstance dtModel dtBindings
+
+// d:DataContext="{d:DesignInstance vm:CounterPaneDesignTimeModel, IsDesignTimeCreatable=True}"
+type CounterPaneDesignTimeModel() =
+    member val Count = 4 with get, set
+    member val StepSize = 8 with get, set
