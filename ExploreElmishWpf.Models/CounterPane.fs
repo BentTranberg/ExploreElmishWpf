@@ -27,6 +27,7 @@ module CounterPane =
         | Decrement
         | SetStepSize of int
         | Reset
+        | Close
 
     let update msg m =
         match msg with
@@ -34,8 +35,9 @@ module CounterPane =
         | Decrement -> { m with Count = m.Count - m.StepSize }, Cmd.none
         | SetStepSize x -> { m with StepSize = x }, Cmd.none
         | Reset -> init ()
+        | Close -> m, Cmd.none  // handled by parent
 
-    let bindings (model: Model) dispatch : Binding<Model, Msg> list =
+    let bindings () : Binding<Model, Msg> list =
         [
             "CounterValue" |> Binding.oneWay (fun m -> m.Count)
             "Increment" |> Binding.cmd Increment
@@ -44,4 +46,5 @@ module CounterPane =
                 (fun m -> float m.StepSize),
                 int >> SetStepSize)
             "Reset" |> Binding.cmdIf (Reset, (<>) initialModel)
+            "Close" |> Binding.cmd Close
         ]

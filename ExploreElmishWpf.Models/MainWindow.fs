@@ -7,60 +7,81 @@ module MainWindow =
     open Elmish
     open Elmish.WPF
 
-    type Dialog =
+    type Pane =
         | Form1 of Form1.Model
         | Form2 of Form2.Model
+        | CounterPane of CounterPane.Model
 
     type Model =
         {
-            Dialog: Dialog option
+            Pane: Pane option
         }
 
     let init () =
         {
-            Dialog = None
+            Pane = None
         }, Cmd.none
 
     type Msg =
         | ShowForm1
         | ShowForm2
+        | ShowCounterPane
         | Form1Msg of Form1.Msg
         | Form2Msg of Form2.Msg
+        | CounterPaneMsg of CounterPane.Msg
 
     let update msg m =
         match msg with
-        | ShowForm1 -> { m with Dialog = Some <| Form1 Form1.init }, Cmd.none
-        | ShowForm2 -> { m with Dialog = Some <| Form2 Form2.init }, Cmd.none
-        | Form1Msg Form1.Submit -> { m with Dialog = None }, Cmd.none
+        | ShowForm1 -> { m with Pane = Some <| Form1 Form1.init }, Cmd.none
+        | ShowForm2 -> { m with Pane = Some <| Form2 Form2.init }, Cmd.none
+        | ShowCounterPane ->
+            let m', cmd' = CounterPane.init ()
+            { m with Pane = Some <| CounterPane m' }, cmd'
+        | Form1Msg Form1.Submit -> { m with Pane = None }, Cmd.none
         | Form1Msg msg' ->
-            match m.Dialog with
-            | Some (Form1 m') -> { m with Dialog = Form1.update msg' m' |> Form1 |> Some }, Cmd.none
+            match m.Pane with
+            | Some (Form1 m') -> { m with Pane = Form1.update msg' m' |> Form1 |> Some }, Cmd.none
             | _ -> m, Cmd.none
-        | Form2Msg Form2.Submit -> { m with Dialog = None }, Cmd.none
+        | Form2Msg Form2.Submit -> { m with Pane = None }, Cmd.none
         | Form2Msg msg' ->
-            match m.Dialog with
-            | Some (Form2 m') -> { m with Dialog = Form2.update msg' m' |> Form2 |> Some }, Cmd.none
+            match m.Pane with
+            | Some (Form2 m') -> { m with Pane = Form2.update msg' m' |> Form2 |> Some }, Cmd.none
+            | _ -> m, Cmd.none
+        | CounterPaneMsg CounterPane.Close -> { m with Pane = None }, Cmd.none
+        | CounterPaneMsg counterPaneMsg ->
+            match m.Pane with
+            | Some (CounterPane m') ->
+                let pane, paneCmd = CounterPane.update counterPaneMsg m'
+                { m with Pane = pane |> CounterPane |> Some }, paneCmd
             | _ -> m, Cmd.none
 
     let bindings (model: Model) dispatch : Binding<Model, Msg> list =
         [
             "ShowForm1" |> Binding.cmd ShowForm1
             "ShowForm2" |> Binding.cmd ShowForm2
-            "DialogVisible" |> Binding.oneWay (fun m -> m.Dialog.IsSome)
+            "ShowCounterPane" |> Binding.cmd ShowCounterPane
+            "DialogVisible" |> Binding.oneWay (fun m -> m.Pane.IsSome)
             "Form1Visible" |> Binding.oneWay
-                (fun m -> match m.Dialog with Some (Form1 _) -> true | _ -> false)
+                (fun m -> match m.Pane with Some (Form1 _) -> true | _ -> false)
             "Form2Visible" |> Binding.oneWay
-                (fun m -> match m.Dialog with Some (Form2 _) -> true | _ -> false)
+                (fun m -> match m.Pane with Some (Form2 _) -> true | _ -> false)
+            "CounterPaneVisible" |> Binding.oneWay
+                (fun m -> match m.Pane with Some (CounterPane _) -> true | _ -> false)
             "Form1" |> Binding.subModelOpt (
-                (fun m -> match m.Dialog with Some (Form1 m') -> Some m' | _ -> None),
+                (fun m -> match m.Pane with Some (Form1 m') -> Some m' | _ -> None),
                 snd,
                 Form1Msg,
                 Form1.bindings)
             "Form2" |> Binding.subModelOpt (
-                (fun m -> match m.Dialog with Some (Form2 m') -> Some m' | _ -> None),
+                (fun m -> match m.Pane with Some (Form2 m') -> Some m' | _ -> None),
                 snd,
                 Form2Msg,
                 Form2.bindings)
+            "CounterPane" |> Binding.subModelOpt (
+                (fun m -> match m.Pane with Some (CounterPane m') -> Some m' | _ -> None),
+                snd,
+                CounterPaneMsg,
+                CounterPane.bindings)
         ]
 
     let entryPoint (_: string[], mainWindow: Window) =

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExploreElmishWpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="500">
+        Title="MainWindow" Height="350" Width="600">
     <Window.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="VisibilityConverter" />
@@ -15,6 +15,7 @@
         <StackPanel Margin="0,15,0,0">
             <Button Command="{Binding ShowForm1}" Content="Show form 1" Width="200" Margin="0,5,0,5" />
             <Button Command="{Binding ShowForm2}" Content="Show form 2" Width="200" Margin="0,5,0,5" />
+            <Button Command="{Binding ShowCounterPane}" Content="Show counter pane" Width="200" Margin="0,5,0,5" />
         </StackPanel>
         <Rectangle
         Fill="Black"
@@ -23,7 +24,7 @@
         <Border
         BorderBrush="Black"
         BorderThickness="2"
-        Width="350"
+        Width="480"
         Height="200"
         Visibility="{Binding DialogVisible, Converter={StaticResource VisibilityConverter}}">
             <StackPanel Background="White">
@@ -35,6 +36,11 @@
                 <local:Form2
                     DataContext="{Binding Form2}"
                     Visibility="{Binding DataContext.Form2Visible,
+                        RelativeSource={RelativeSource AncestorType=Window},
+                        Converter={StaticResource VisibilityConverter}}" />
+                <local:CounterPane
+                    DataContext="{Binding CounterPane}"
+                    Visibility="{Binding DataContext.CounterPaneVisible,
                         RelativeSource={RelativeSource AncestorType=Window},
                         Converter={StaticResource VisibilityConverter}}" />
             </StackPanel>
