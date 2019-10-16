@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29411.108
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExploreElmishWpf", "ExploreElmishWpf\ExploreElmishWpf.csproj", "{E9163993-050F-4D67-97BA-9ACC497505D9}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ExploreElmishWpf.Models", "ExploreElmishWpf.Models\ExploreElmishWpf.Models.fsproj", "{DB56C952-851A-478B-ACB9-6E51AF225117}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E9163993-050F-4D67-97BA-9ACC497505D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9163993-050F-4D67-97BA-9ACC497505D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9163993-050F-4D67-97BA-9ACC497505D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9163993-050F-4D67-97BA-9ACC497505D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB56C952-851A-478B-ACB9-6E51AF225117}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB56C952-851A-478B-ACB9-6E51AF225117}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB56C952-851A-478B-ACB9-6E51AF225117}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB56C952-851A-478B-ACB9-6E51AF225117}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9379AD9C-5B04-4C7F-BA8B-28F82D53FDDA}
+	EndGlobalSection
+EndGlobal
