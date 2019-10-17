@@ -41,8 +41,9 @@ module TabsPane =
     let update msg m =
         match msg with
         | AddTab ->
-            let newTab = { Id = Guid.NewGuid (); Name = "Tab" + createTabId () }
-            { m with Tabs = m.Tabs |> List.append [newTab] }, Cmd.none
+            let newGuid = Guid.NewGuid ()
+            let newTab = { Id = newGuid; Name = "Tab" + createTabId () }
+            { m with Tabs = List.append m.Tabs [ newTab ]; SelectedTab = Some newGuid }, Cmd.none
         | CloseTab tabId ->
             let newTabs = m.Tabs |> List.filter (fun t -> t.Id <> tabId)
             // Logic for selected tab: Keep existing selected if not removed. If
