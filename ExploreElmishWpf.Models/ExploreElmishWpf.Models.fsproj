@@ -9,6 +9,7 @@
     <Compile Include="CounterPane.fs" />
     <Compile Include="Form1.fs" />
     <Compile Include="Form2.fs" />
+    <Compile Include="TabsPane.fs" />
     <Compile Include="MainWindow.fs" />
   </ItemGroup>
 

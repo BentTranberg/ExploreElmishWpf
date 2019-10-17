@@ -11,6 +11,9 @@
     <Compile Update="Form2.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="TabsPane.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="CounterPane.xaml">
@@ -23,6 +26,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="TabsPane.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

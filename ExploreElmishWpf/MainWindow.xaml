@@ -16,6 +16,7 @@
             <Button Command="{Binding ShowForm1}" Content="Show form 1" />
             <Button Command="{Binding ShowForm2}" Content="Show form 2" />
             <Button Command="{Binding ShowCounterPane}" Content="Show counter pane" />
+            <Button Command="{Binding ShowTabsPane}" Content="Show tabs pane" />
         </StackPanel>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <Grid>
@@ -36,6 +37,11 @@
                     <local:CounterPane
                             DataContext="{Binding CounterPane}"
                             Visibility="{Binding DataContext.CounterPaneVisible,
+                            RelativeSource={RelativeSource AncestorType=Window},
+                            Converter={StaticResource VisibilityConverter}}" />
+                    <local:TabsPane
+                            DataContext="{Binding TabsPane}"
+                            Visibility="{Binding DataContext.TabsPaneVisible,
                             RelativeSource={RelativeSource AncestorType=Window},
                             Converter={StaticResource VisibilityConverter}}" />
                 </StackPanel>

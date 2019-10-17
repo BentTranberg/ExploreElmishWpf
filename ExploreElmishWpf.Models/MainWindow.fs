@@ -11,6 +11,7 @@ module MainWindow =
         | Form1 of Form1.Model
         | Form2 of Form2.Model
         | CounterPane of CounterPane.Model
+        | TabsPane of TabsPane.Model
 
     type Model =
         {
@@ -26,9 +27,11 @@ module MainWindow =
         | ShowForm1
         | ShowForm2
         | ShowCounterPane
+        | ShowTabsPane
         | Form1Msg of Form1.Msg
         | Form2Msg of Form2.Msg
         | CounterPaneMsg of CounterPane.Msg
+        | TabsPaneMsg of TabsPane.Msg
 
     let update msg m =
         match msg with
@@ -37,6 +40,9 @@ module MainWindow =
         | ShowCounterPane ->
             let m', cmd' = CounterPane.init ()
             { m with Pane = Some <| CounterPane m' }, cmd'
+        | ShowTabsPane ->
+            let m', cmd' = TabsPane.init ()
+            { m with Pane = Some <| TabsPane m' }, cmd'
         | Form1Msg Form1.Submit -> { m with Pane = None }, Cmd.none
         | Form1Msg msg' ->
             match m.Pane with
@@ -54,12 +60,20 @@ module MainWindow =
                 let pane, paneCmd = CounterPane.update counterPaneMsg m'
                 { m with Pane = pane |> CounterPane |> Some }, paneCmd
             | _ -> m, Cmd.none
+        | TabsPaneMsg TabsPane.Close -> { m with Pane = None }, Cmd.none
+        | TabsPaneMsg tabsPaneMsg ->
+            match m.Pane with
+            | Some (TabsPane m') ->
+                let pane, paneCmd = TabsPane.update tabsPaneMsg m'
+                { m with Pane = pane |> TabsPane |> Some }, paneCmd
+            | _ -> m, Cmd.none
 
     let bindings (model: Model) dispatch : Binding<Model, Msg> list =
         [
             "ShowForm1" |> Binding.cmd ShowForm1
             "ShowForm2" |> Binding.cmd ShowForm2
             "ShowCounterPane" |> Binding.cmd ShowCounterPane
+            "ShowTabsPane" |> Binding.cmd ShowTabsPane
             "PaneVisible" |> Binding.oneWay (fun m -> m.Pane.IsSome)
             "NotPaneVisible" |> Binding.oneWay (fun m -> m.Pane.IsNone)
             "Form1Visible" |> Binding.oneWay
@@ -68,6 +82,8 @@ module MainWindow =
                 (fun m -> match m.Pane with Some (Form2 _) -> true | _ -> false)
             "CounterPaneVisible" |> Binding.oneWay
                 (fun m -> match m.Pane with Some (CounterPane _) -> true | _ -> false)
+            "TabsPaneVisible" |> Binding.oneWay
+                (fun m -> match m.Pane with Some (TabsPane _) -> true | _ -> false)
             "Form1" |> Binding.subModelOpt (
                 (fun m -> match m.Pane with Some (Form1 m') -> Some m' | _ -> None),
                 snd,
@@ -83,6 +99,11 @@ module MainWindow =
                 snd,
                 CounterPaneMsg,
                 CounterPane.bindings)
+            "TabsPane" |> Binding.subModelOpt (
+                (fun m -> match m.Pane with Some (TabsPane m') -> Some m' | _ -> None),
+                snd,
+                TabsPaneMsg,
+                TabsPane.bindings)
         ]
 
     let entryPoint (_: string[], mainWindow: Window) =

@@ -4,9 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ExploreElmishWpf"
-             xmlns:vm="clr-namespace:ExploreElmishWpf.Models;assembly=ExploreElmishWpf.Models"
+             xmlns:model="clr-namespace:ExploreElmishWpf.Models;assembly=ExploreElmishWpf.Models"
              mc:Ignorable="d" 
-             d:DataContext="{x:Static vm:CounterPane.designTimeModel}"
+             d:DataContext="{x:Static model:CounterPane.designTimeModel}"
              d:DesignHeight="120" d:DesignWidth="500">
     <DockPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,25,0,0">
