@@ -99,7 +99,7 @@ module MainWindow =
     let bindings (model: Model) dispatch : Binding<Model, Msg> list =
         [
             "TabIndex" |> Binding.twoWay ((fun m -> m.TabIndex), (fun tabIndex -> SetTabIndex tabIndex))
-            "NoPanesVisible" |> Binding.oneWay (fun m -> m.WorkPane.IsNone && m.HelpPane.IsNone)
+            "NoPanesVisible" |> Binding.oneWay (fun m -> m.WorkPane.IsNone && m.TabIndex = 0 || m.HelpPane.IsNone && m.TabIndex = 1)
             "WorkPaneVisible" |> Binding.oneWay (fun m -> m.WorkPane.IsSome && m.TabIndex = 0)
             "HelpPaneVisible" |> Binding.oneWay (fun m -> m.HelpPane.IsSome && m.TabIndex = 1)
 
