@@ -19,10 +19,10 @@
                 <ToolBar ToolBarTray.IsLocked="True" Loaded="ToolBar_Loaded">
                     <!-- https://stackoverflow.com/questions/1050953/wpf-toolbar-how-to-remove-grip-and-overflow -->
                     <Menu ToolBar.OverflowMode="Never"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowForm1}" IsChecked="{Binding Form1Visible}" Content="Show form 1"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowForm2}" IsChecked="{Binding Form2Visible}" Content="Show form 2"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowCounterPane}" IsChecked="{Binding CounterPaneVisible}" Content="Show counter pane"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowTabsPane}" IsChecked="{Binding TabsPaneVisible}" Content="Show tabs pane"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowForm1Page}" IsChecked="{Binding Form1PageVisible}" Content="Show form 1"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowForm2Page}" IsChecked="{Binding Form2PageVisible}" Content="Show form 2"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowCounterPage}" IsChecked="{Binding CounterPageVisible}" Content="Show counter demo"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowTabsPage}" IsChecked="{Binding TabsPageVisible}" Content="Show tabs demo"/>
                 </ToolBar>
             </TabItem>
             <TabItem Header="Help">
@@ -41,23 +41,23 @@
                 <StackPanel
                         Visibility="{Binding WorkPaneVisible, Converter={StaticResource VisibilityConverter}}">
                     <local:Form1
-                            DataContext="{Binding Form1}"
-                            Visibility="{Binding DataContext.Form1Visible,
+                            DataContext="{Binding Form1Page}"
+                            Visibility="{Binding DataContext.Form1PageVisible,
                             RelativeSource={RelativeSource AncestorType=Window},
                             Converter={StaticResource VisibilityConverter}}" />
                     <local:Form2
-                            DataContext="{Binding Form2}"
-                            Visibility="{Binding DataContext.Form2Visible,
+                            DataContext="{Binding Form2Page}"
+                            Visibility="{Binding DataContext.Form2PageVisible,
                             RelativeSource={RelativeSource AncestorType=Window},
                             Converter={StaticResource VisibilityConverter}}" />
-                    <local:CounterPane
-                            DataContext="{Binding CounterPane}"
-                            Visibility="{Binding DataContext.CounterPaneVisible,
+                    <local:CounterDemo
+                            DataContext="{Binding CounterPage}"
+                            Visibility="{Binding DataContext.CounterPageVisible,
                             RelativeSource={RelativeSource AncestorType=Window},
                             Converter={StaticResource VisibilityConverter}}" />
-                    <local:TabsPane
-                            DataContext="{Binding TabsPane}"
-                            Visibility="{Binding DataContext.TabsPaneVisible,
+                    <local:TabsDemo
+                            DataContext="{Binding TabsPage}"
+                            Visibility="{Binding DataContext.TabsPageVisible,
                             RelativeSource={RelativeSource AncestorType=Window},
                             Converter={StaticResource VisibilityConverter}}" />
                 </StackPanel>

@@ -8,10 +8,10 @@ module MainWindow =
     open Elmish.WPF
 
     type WorkPane =
-        | Form1 of Form1.Model
-        | Form2 of Form2.Model
-        | CounterPane of CounterPane.Model
-        | TabsPane of TabsPane.Model
+        | Form1Page of Form1.Model
+        | Form2Page of Form2.Model
+        | CounterPage of CounterDemo.Model
+        | TabsPage of TabsDemo.Model
 
     type HelpPane =
         | HelpContentPage of HelpContent.Model
@@ -36,15 +36,15 @@ module MainWindow =
 
         | ShowForm1
         | ShowForm2
-        | ShowCounterPane
-        | ShowTabsPane
+        | ShowCounterPage
+        | ShowTabsPage
         | ShowHelpContentPage
         | ShowAboutPage
 
         | Form1Msg of Form1.Msg
         | Form2Msg of Form2.Msg
-        | CounterPaneMsg of CounterPane.Msg
-        | TabsPaneMsg of TabsPane.Msg
+        | CounterPageMsg of CounterDemo.Msg
+        | TabsPageMsg of TabsDemo.Msg
         | HelpContentPageMsg of HelpContent.Msg
         | AboutPageMsg of AboutBox.Msg
 
@@ -52,40 +52,40 @@ module MainWindow =
         match msg with
         | SetTabIndex tabIndex -> { m with TabIndex = tabIndex }, Cmd.none
 
-        | ShowForm1 -> { m with WorkPane = Form1.init |> Form1 |> Some }, Cmd.none
-        | ShowForm2 -> { m with WorkPane = Form2.init |> Form2 |> Some }, Cmd.none
-        | ShowCounterPane ->
-            let m', cmd' = CounterPane.init ()
-            { m with WorkPane = CounterPane m' |> Some }, cmd'
-        | ShowTabsPane ->
-            let m', cmd' = TabsPane.init ()
-            { m with WorkPane = TabsPane m' |> Some }, cmd'
+        | ShowForm1 -> { m with WorkPane = Form1.init |> Form1Page |> Some }, Cmd.none
+        | ShowForm2 -> { m with WorkPane = Form2.init |> Form2Page |> Some }, Cmd.none
+        | ShowCounterPage ->
+            let m', cmd' = CounterDemo.init ()
+            { m with WorkPane = CounterPage m' |> Some }, cmd'
+        | ShowTabsPage ->
+            let m', cmd' = TabsDemo.init ()
+            { m with WorkPane = TabsPage m' |> Some }, cmd'
         | ShowHelpContentPage -> { m with HelpPane = HelpContent.init () |> HelpContentPage |> Some }, Cmd.none
         | ShowAboutPage -> { m with HelpPane = AboutBox.init |> AboutPage |> Some }, Cmd.none
 
         | Form1Msg Form1.Submit -> { m with WorkPane = None }, Cmd.none
         | Form1Msg msg' ->
             match m.WorkPane with
-            | Some (Form1 m') -> { m with WorkPane = Form1.update msg' m' |> Form1 |> Some }, Cmd.none
+            | Some (Form1Page m') -> { m with WorkPane = Form1.update msg' m' |> Form1Page |> Some }, Cmd.none
             | _ -> m, Cmd.none
         | Form2Msg Form2.Submit -> { m with WorkPane = None }, Cmd.none
         | Form2Msg msg' ->
             match m.WorkPane with
-            | Some (Form2 m') -> { m with WorkPane = Form2.update msg' m' |> Form2 |> Some }, Cmd.none
+            | Some (Form2Page m') -> { m with WorkPane = Form2.update msg' m' |> Form2Page |> Some }, Cmd.none
             | _ -> m, Cmd.none
-        | CounterPaneMsg CounterPane.Close -> { m with WorkPane = None }, Cmd.none
-        | CounterPaneMsg counterPaneMsg ->
+        | CounterPageMsg CounterDemo.Close -> { m with WorkPane = None }, Cmd.none
+        | CounterPageMsg counterPageMsg ->
             match m.WorkPane with
-            | Some (CounterPane m') ->
-                let pane, paneCmd = CounterPane.update counterPaneMsg m'
-                { m with WorkPane = pane |> CounterPane |> Some }, paneCmd
+            | Some (CounterPage m') ->
+                let pane, paneCmd = CounterDemo.update counterPageMsg m'
+                { m with WorkPane = pane |> CounterPage |> Some }, paneCmd
             | _ -> m, Cmd.none
-        | TabsPaneMsg TabsPane.Close -> { m with WorkPane = None }, Cmd.none
-        | TabsPaneMsg tabsPaneMsg ->
+        | TabsPageMsg TabsDemo.Close -> { m with WorkPane = None }, Cmd.none
+        | TabsPageMsg tabsPageMsg ->
             match m.WorkPane with
-            | Some (TabsPane m') ->
-                let pane, paneCmd = TabsPane.update tabsPaneMsg m'
-                { m with WorkPane = pane |> TabsPane |> Some }, paneCmd
+            | Some (TabsPage m') ->
+                let pane, paneCmd = TabsDemo.update tabsPageMsg m'
+                { m with WorkPane = pane |> TabsPage |> Some }, paneCmd
             | _ -> m, Cmd.none
         | HelpContentPageMsg msg' ->
             match m.HelpPane with
@@ -103,38 +103,38 @@ module MainWindow =
             "WorkPaneVisible" |> Binding.oneWay (fun m -> m.WorkPane.IsSome && m.TabIndex = 0)
             "HelpPaneVisible" |> Binding.oneWay (fun m -> m.HelpPane.IsSome && m.TabIndex = 1)
 
-            "ShowForm1" |> Binding.cmd ShowForm1
-            "ShowForm2" |> Binding.cmd ShowForm2
-            "ShowCounterPane" |> Binding.cmd ShowCounterPane
-            "ShowTabsPane" |> Binding.cmd ShowTabsPane
+            "ShowForm1Page" |> Binding.cmd ShowForm1
+            "ShowForm2Page" |> Binding.cmd ShowForm2
+            "ShowCounterPage" |> Binding.cmd ShowCounterPage
+            "ShowTabsPage" |> Binding.cmd ShowTabsPage
             "ShowHelpContentPage" |> Binding.cmd ShowHelpContentPage
             "ShowAboutPage" |> Binding.cmd ShowAboutPage
 
-            "Form1Visible" |> Binding.oneWay
-                (fun m -> match m.WorkPane with Some (Form1 _) -> true | _ -> false)
-            "Form2Visible" |> Binding.oneWay
-                (fun m -> match m.WorkPane with Some (Form2 _) -> true | _ -> false)
-            "CounterPaneVisible" |> Binding.oneWay
-                (fun m -> match m.WorkPane with Some (CounterPane _) -> true | _ -> false)
-            "TabsPaneVisible" |> Binding.oneWay
-                (fun m -> match m.WorkPane with Some (TabsPane _) -> true | _ -> false)
+            "Form1PageVisible" |> Binding.oneWay
+                (fun m -> match m.WorkPane with Some (Form1Page _) -> true | _ -> false)
+            "Form2PageVisible" |> Binding.oneWay
+                (fun m -> match m.WorkPane with Some (Form2Page _) -> true | _ -> false)
+            "CounterPageVisible" |> Binding.oneWay
+                (fun m -> match m.WorkPane with Some (CounterPage _) -> true | _ -> false)
+            "TabsPageVisible" |> Binding.oneWay
+                (fun m -> match m.WorkPane with Some (TabsPage _) -> true | _ -> false)
             "HelpContentPageVisible" |> Binding.oneWay
                 (fun m -> match m.HelpPane with Some (HelpContentPage _) -> true | _ -> false)
-            "AboutPaneVisible" |> Binding.oneWay
+            "AboutPageVisible" |> Binding.oneWay
                 (fun m -> match m.HelpPane with Some (AboutPage _) -> true | _ -> false)
 
-            "Form1" |> Binding.subModelOpt (
-                (fun m -> match m.WorkPane with Some (Form1 m') -> Some m' | _ -> None),
+            "Form1Page" |> Binding.subModelOpt (
+                (fun m -> match m.WorkPane with Some (Form1Page m') -> Some m' | _ -> None),
                 snd, Form1Msg, Form1.bindings)
-            "Form2" |> Binding.subModelOpt (
-                (fun m -> match m.WorkPane with Some (Form2 m') -> Some m' | _ -> None),
+            "Form2Page" |> Binding.subModelOpt (
+                (fun m -> match m.WorkPane with Some (Form2Page m') -> Some m' | _ -> None),
                 snd, Form2Msg, Form2.bindings)
-            "CounterPane" |> Binding.subModelOpt (
-                (fun m -> match m.WorkPane with Some (CounterPane m') -> Some m' | _ -> None),
-                snd, CounterPaneMsg, CounterPane.bindings)
-            "TabsPane" |> Binding.subModelOpt (
-                (fun m -> match m.WorkPane with Some (TabsPane m') -> Some m' | _ -> None),
-                snd, TabsPaneMsg, TabsPane.bindings)
+            "CounterPage" |> Binding.subModelOpt (
+                (fun m -> match m.WorkPane with Some (CounterPage m') -> Some m' | _ -> None),
+                snd, CounterPageMsg, CounterDemo.bindings)
+            "TabsPage" |> Binding.subModelOpt (
+                (fun m -> match m.WorkPane with Some (TabsPage m') -> Some m' | _ -> None),
+                snd, TabsPageMsg, TabsDemo.bindings)
             "HelpContentPage" |> Binding.subModelOpt (
                 (fun m -> match m.HelpPane with Some (HelpContentPage m') -> Some m' | _ -> None),
                 snd, HelpContentPageMsg, HelpContent.bindings)

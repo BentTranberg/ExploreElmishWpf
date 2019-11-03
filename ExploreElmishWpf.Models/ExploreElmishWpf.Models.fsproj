@@ -8,10 +8,10 @@
   <ItemGroup>
     <Compile Include="HelpContent.fs" />
     <Compile Include="AboutBox.fs" />
-    <Compile Include="CounterPane.fs" />
+    <Compile Include="CounterDemo.fs" />
     <Compile Include="Form1.fs" />
     <Compile Include="Form2.fs" />
-    <Compile Include="TabsPane.fs" />
+    <Compile Include="TabsDemo.fs" />
     <Compile Include="MainWindow.fs" />
   </ItemGroup>
 

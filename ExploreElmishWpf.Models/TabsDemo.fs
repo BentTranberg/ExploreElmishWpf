@@ -1,6 +1,6 @@
 ﻿namespace ExploreElmishWpf.Models
 
-module TabsPane =
+module TabsDemo =
 
     open System
     open Elmish

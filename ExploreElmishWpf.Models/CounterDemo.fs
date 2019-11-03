@@ -1,6 +1,6 @@
 ﻿namespace ExploreElmishWpf.Models
 
-module CounterPane =
+module CounterDemo =
 
     open System
     open System.Windows

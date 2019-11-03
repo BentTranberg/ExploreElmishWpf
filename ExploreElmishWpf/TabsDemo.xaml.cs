@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace ExploreElmishWpf
 {
     /// <summary>
-    /// Interaction logic for CounterPane.xaml
+    /// Interaction logic for TabsDemo.xaml
     /// </summary>
-    public partial class CounterPane : UserControl
+    public partial class TabsDemo : UserControl
     {
-        public CounterPane()
+        public TabsDemo()
         {
             InitializeComponent();
         }
