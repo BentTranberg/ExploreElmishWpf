@@ -2,7 +2,7 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
-    <Compile Update="AboutPane.xaml.cs">
+    <Compile Update="AboutBox.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="CounterPane.xaml.cs">
@@ -22,7 +22,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="AboutPane.xaml">
+    <Page Update="AboutBox.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="CounterPane.xaml">

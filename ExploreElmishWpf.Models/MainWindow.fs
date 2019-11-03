@@ -15,7 +15,7 @@ module MainWindow =
 
     type HelpPane =
         | HelpContentPane of HelpContentPane.Model
-        | AboutPane of AboutPane.Model
+        | AboutPage of AboutBox.Model
 
     type Model =
         {
@@ -39,14 +39,14 @@ module MainWindow =
         | ShowCounterPane
         | ShowTabsPane
         | ShowHelpContentPane
-        | ShowAboutPane
+        | ShowAboutPage
 
         | Form1Msg of Form1.Msg
         | Form2Msg of Form2.Msg
         | CounterPaneMsg of CounterPane.Msg
         | TabsPaneMsg of TabsPane.Msg
         | HelpContentPaneMsg of HelpContentPane.Msg
-        | AboutPaneMsg of AboutPane.Msg
+        | AboutPageMsg of AboutBox.Msg
 
     let update msg m =
         match msg with
@@ -61,7 +61,7 @@ module MainWindow =
             let m', cmd' = TabsPane.init ()
             { m with WorkPane = TabsPane m' |> Some }, cmd'
         | ShowHelpContentPane -> { m with HelpPane = HelpContentPane.init () |> HelpContentPane |> Some }, Cmd.none
-        | ShowAboutPane -> { m with HelpPane = AboutPane.init |> AboutPane |> Some }, Cmd.none
+        | ShowAboutPage -> { m with HelpPane = AboutBox.init |> AboutPage |> Some }, Cmd.none
 
         | Form1Msg Form1.Submit -> { m with WorkPane = None }, Cmd.none
         | Form1Msg msg' ->
@@ -91,9 +91,9 @@ module MainWindow =
             match m.HelpPane with
             | Some (HelpContentPane m') -> { m with HelpPane = HelpContentPane.update msg' m' |> HelpContentPane |> Some }, Cmd.none
             | _ -> m, Cmd.none
-        | AboutPaneMsg msg' ->
+        | AboutPageMsg msg' ->
             match m.HelpPane with
-            | Some (AboutPane m') -> { m with HelpPane = AboutPane.update msg' m' |> AboutPane |> Some }, Cmd.none
+            | Some (AboutPage m') -> { m with HelpPane = AboutBox.update msg' m' |> AboutPage |> Some }, Cmd.none
             | _ -> m, Cmd.none
 
     let bindings (model: Model) dispatch : Binding<Model, Msg> list =
@@ -108,7 +108,7 @@ module MainWindow =
             "ShowCounterPane" |> Binding.cmd ShowCounterPane
             "ShowTabsPane" |> Binding.cmd ShowTabsPane
             "ShowHelpContentPane" |> Binding.cmd ShowHelpContentPane
-            "ShowAboutPane" |> Binding.cmd ShowAboutPane
+            "ShowAboutPage" |> Binding.cmd ShowAboutPage
 
             "Form1Visible" |> Binding.oneWay
                 (fun m -> match m.WorkPane with Some (Form1 _) -> true | _ -> false)
@@ -121,7 +121,7 @@ module MainWindow =
             "HelpContentPaneVisible" |> Binding.oneWay
                 (fun m -> match m.HelpPane with Some (HelpContentPane _) -> true | _ -> false)
             "AboutPaneVisible" |> Binding.oneWay
-                (fun m -> match m.HelpPane with Some (AboutPane _) -> true | _ -> false)
+                (fun m -> match m.HelpPane with Some (AboutPage _) -> true | _ -> false)
 
             "Form1" |> Binding.subModelOpt (
                 (fun m -> match m.WorkPane with Some (Form1 m') -> Some m' | _ -> None),
@@ -138,9 +138,9 @@ module MainWindow =
             "HelpContentPane" |> Binding.subModelOpt (
                 (fun m -> match m.HelpPane with Some (HelpContentPane m') -> Some m' | _ -> None),
                 snd, HelpContentPaneMsg, HelpContentPane.bindings)
-            "AboutPane" |> Binding.subModelOpt (
-                (fun m -> match m.HelpPane with Some (AboutPane m') -> Some m' | _ -> None),
-                snd, AboutPaneMsg, AboutPane.bindings)
+            "AboutPage" |> Binding.subModelOpt (
+                (fun m -> match m.HelpPane with Some (AboutPage m') -> Some m' | _ -> None),
+                snd, AboutPageMsg, AboutBox.bindings)
         ]
 
     let designTimeModel =

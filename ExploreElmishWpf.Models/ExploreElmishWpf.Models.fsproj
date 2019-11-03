@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <Compile Include="HelpContentPane.fs" />
-    <Compile Include="AboutPane.fs" />
+    <Compile Include="AboutBox.fs" />
     <Compile Include="CounterPane.fs" />
     <Compile Include="Form1.fs" />
     <Compile Include="Form2.fs" />

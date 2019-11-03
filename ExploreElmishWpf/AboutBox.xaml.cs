@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace ExploreElmishWpf
 {
     /// <summary>
-    /// Interaction logic for AboutPane.xaml
+    /// Interaction logic for AboutBox.xaml
     /// </summary>
-    public partial class AboutPane : UserControl
+    public partial class AboutBox : UserControl
     {
-        public AboutPane()
+        public AboutBox()
         {
             InitializeComponent();
         }

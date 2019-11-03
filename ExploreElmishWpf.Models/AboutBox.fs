@@ -1,6 +1,6 @@
 ﻿namespace ExploreElmishWpf.Models
 
-module AboutPane =
+module AboutBox =
 
     open System
     open Elmish
