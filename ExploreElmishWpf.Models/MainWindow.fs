@@ -74,8 +74,10 @@ module MainWindow =
             "ShowForm2" |> Binding.cmd ShowForm2
             "ShowCounterPane" |> Binding.cmd ShowCounterPane
             "ShowTabsPane" |> Binding.cmd ShowTabsPane
+
             "PaneVisible" |> Binding.oneWay (fun m -> m.Pane.IsSome)
             "NotPaneVisible" |> Binding.oneWay (fun m -> m.Pane.IsNone)
+
             "Form1Visible" |> Binding.oneWay
                 (fun m -> match m.Pane with Some (Form1 _) -> true | _ -> false)
             "Form2Visible" |> Binding.oneWay
@@ -84,6 +86,7 @@ module MainWindow =
                 (fun m -> match m.Pane with Some (CounterPane _) -> true | _ -> false)
             "TabsPaneVisible" |> Binding.oneWay
                 (fun m -> match m.Pane with Some (TabsPane _) -> true | _ -> false)
+
             "Form1" |> Binding.subModelOpt (
                 (fun m -> match m.Pane with Some (Form1 m') -> Some m' | _ -> None),
                 snd,
@@ -105,6 +108,11 @@ module MainWindow =
                 TabsPaneMsg,
                 TabsPane.bindings)
         ]
+
+    let designTimeModel =
+        let model = { Pane = None }
+        let dispatch = fun _ -> ()
+        ViewModel.designInstance model (bindings model dispatch)
 
     let entryPoint (_: string[], mainWindow: Window) =
         Program.mkProgram init update bindings

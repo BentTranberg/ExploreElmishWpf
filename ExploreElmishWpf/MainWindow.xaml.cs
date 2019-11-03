@@ -24,5 +24,21 @@ namespace ExploreElmishWpf
         {
             InitializeComponent();
         }
+
+        private void ToolBar_Loaded(object sender, RoutedEventArgs e)
+        {
+            // https://stackoverflow.com/questions/1050953/wpf-toolbar-how-to-remove-grip-and-overflow
+            ToolBar toolBar = sender as ToolBar;
+            var overflowGrid = toolBar.Template.FindName("OverflowGrid", toolBar) as FrameworkElement;
+            if (overflowGrid != null)
+            {
+                overflowGrid.Visibility = Visibility.Collapsed;
+            }
+            var mainPanelBorder = toolBar.Template.FindName("MainPanelBorder", toolBar) as FrameworkElement;
+            if (mainPanelBorder != null)
+            {
+                mainPanelBorder.Margin = new Thickness();
+            }
+        }
     }
 }
