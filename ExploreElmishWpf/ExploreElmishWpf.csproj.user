@@ -2,6 +2,9 @@
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup />
   <ItemGroup>
+    <Compile Update="AboutPane.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="CounterPane.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -11,11 +14,17 @@
     <Compile Update="Form2.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="HelpPane.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="TabsPane.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="AboutPane.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="CounterPane.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -23,6 +32,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Form2.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="HelpPane.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">

@@ -12,6 +12,8 @@ module MainWindow =
         | Form2 of Form2.Model
         | CounterPane of CounterPane.Model
         | TabsPane of TabsPane.Model
+        | HelpPane of HelpPane.Model
+        | AboutPane of AboutPane.Model
 
     type Model =
         {
@@ -28,10 +30,15 @@ module MainWindow =
         | ShowForm2
         | ShowCounterPane
         | ShowTabsPane
+        | ShowHelpPane
+        | ShowAboutPane
+
         | Form1Msg of Form1.Msg
         | Form2Msg of Form2.Msg
         | CounterPaneMsg of CounterPane.Msg
         | TabsPaneMsg of TabsPane.Msg
+        | HelpPaneMsg of HelpPane.Msg
+        | AboutPaneMsg of AboutPane.Msg
 
     let update msg m =
         match msg with
@@ -43,6 +50,9 @@ module MainWindow =
         | ShowTabsPane ->
             let m', cmd' = TabsPane.init ()
             { m with Pane = Some <| TabsPane m' }, cmd'
+        | ShowHelpPane -> { m with Pane = Some <| HelpPane HelpPane.init }, Cmd.none
+        | ShowAboutPane -> { m with Pane = Some <| AboutPane AboutPane.init }, Cmd.none
+
         | Form1Msg Form1.Submit -> { m with Pane = None }, Cmd.none
         | Form1Msg msg' ->
             match m.Pane with
@@ -67,16 +77,26 @@ module MainWindow =
                 let pane, paneCmd = TabsPane.update tabsPaneMsg m'
                 { m with Pane = pane |> TabsPane |> Some }, paneCmd
             | _ -> m, Cmd.none
+        | HelpPaneMsg msg' ->
+            match m.Pane with
+            | Some (HelpPane m') -> { m with Pane = HelpPane.update msg' m' |> HelpPane |> Some }, Cmd.none
+            | _ -> m, Cmd.none
+        | AboutPaneMsg msg' ->
+            match m.Pane with
+            | Some (AboutPane m') -> { m with Pane = AboutPane.update msg' m' |> AboutPane |> Some }, Cmd.none
+            | _ -> m, Cmd.none
 
     let bindings (model: Model) dispatch : Binding<Model, Msg> list =
         [
+            "PaneVisible" |> Binding.oneWay (fun m -> m.Pane.IsSome)
+            "NotPaneVisible" |> Binding.oneWay (fun m -> m.Pane.IsNone)
+
             "ShowForm1" |> Binding.cmd ShowForm1
             "ShowForm2" |> Binding.cmd ShowForm2
             "ShowCounterPane" |> Binding.cmd ShowCounterPane
             "ShowTabsPane" |> Binding.cmd ShowTabsPane
-
-            "PaneVisible" |> Binding.oneWay (fun m -> m.Pane.IsSome)
-            "NotPaneVisible" |> Binding.oneWay (fun m -> m.Pane.IsNone)
+            "ShowHelpPane" |> Binding.cmd ShowHelpPane
+            "ShowAboutPane" |> Binding.cmd ShowAboutPane
 
             "Form1Visible" |> Binding.oneWay
                 (fun m -> match m.Pane with Some (Form1 _) -> true | _ -> false)
@@ -86,27 +106,29 @@ module MainWindow =
                 (fun m -> match m.Pane with Some (CounterPane _) -> true | _ -> false)
             "TabsPaneVisible" |> Binding.oneWay
                 (fun m -> match m.Pane with Some (TabsPane _) -> true | _ -> false)
+            "HelpPaneVisible" |> Binding.oneWay
+                (fun m -> match m.Pane with Some (HelpPane _) -> true | _ -> false)
+            "AboutPaneVisible" |> Binding.oneWay
+                (fun m -> match m.Pane with Some (AboutPane _) -> true | _ -> false)
 
             "Form1" |> Binding.subModelOpt (
                 (fun m -> match m.Pane with Some (Form1 m') -> Some m' | _ -> None),
-                snd,
-                Form1Msg,
-                Form1.bindings)
+                snd, Form1Msg, Form1.bindings)
             "Form2" |> Binding.subModelOpt (
                 (fun m -> match m.Pane with Some (Form2 m') -> Some m' | _ -> None),
-                snd,
-                Form2Msg,
-                Form2.bindings)
+                snd, Form2Msg, Form2.bindings)
             "CounterPane" |> Binding.subModelOpt (
                 (fun m -> match m.Pane with Some (CounterPane m') -> Some m' | _ -> None),
-                snd,
-                CounterPaneMsg,
-                CounterPane.bindings)
+                snd, CounterPaneMsg, CounterPane.bindings)
             "TabsPane" |> Binding.subModelOpt (
                 (fun m -> match m.Pane with Some (TabsPane m') -> Some m' | _ -> None),
-                snd,
-                TabsPaneMsg,
-                TabsPane.bindings)
+                snd, TabsPaneMsg, TabsPane.bindings)
+            "HelpPane" |> Binding.subModelOpt (
+                (fun m -> match m.Pane with Some (HelpPane m') -> Some m' | _ -> None),
+                snd, HelpPaneMsg, HelpPane.bindings)
+            "AboutPane" |> Binding.subModelOpt (
+                (fun m -> match m.Pane with Some (AboutPane m') -> Some m' | _ -> None),
+                snd, AboutPaneMsg, AboutPane.bindings)
         ]
 
     let designTimeModel =

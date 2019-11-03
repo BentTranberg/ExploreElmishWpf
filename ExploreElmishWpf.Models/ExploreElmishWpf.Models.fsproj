@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="HelpPane.fs" />
+    <Compile Include="AboutPane.fs" />
     <Compile Include="CounterPane.fs" />
     <Compile Include="Form1.fs" />
     <Compile Include="Form2.fs" />

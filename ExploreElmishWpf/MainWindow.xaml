@@ -14,14 +14,26 @@
         </ResourceDictionary>
     </Window.Resources>
     <DockPanel>
-        <ToolBar DockPanel.Dock="Top" ToolBarTray.IsLocked="True" Loaded="ToolBar_Loaded">
-            <!-- https://stackoverflow.com/questions/1050953/wpf-toolbar-how-to-remove-grip-and-overflow -->
-            <Menu ToolBar.OverflowMode="Never"/>
-            <RadioButton GroupName="A" Command="{Binding ShowForm1}" IsChecked="{Binding Form1Visible}" Content="Show form 1"/>
-            <RadioButton GroupName="A" Command="{Binding ShowForm2}" IsChecked="{Binding Form2Visible}" Content="Show form 2"/>
-            <RadioButton GroupName="A" Command="{Binding ShowCounterPane}" IsChecked="{Binding CounterPaneVisible}" Content="Show counter pane"/>
-            <RadioButton GroupName="A" Command="{Binding ShowTabsPane}" IsChecked="{Binding TabsPaneVisible}" Content="Show tabs pane"/>
-        </ToolBar>
+        <TabControl DockPanel.Dock="Top">
+            <TabItem Header="Work">
+                <ToolBar ToolBarTray.IsLocked="True" Loaded="ToolBar_Loaded">
+                    <!-- https://stackoverflow.com/questions/1050953/wpf-toolbar-how-to-remove-grip-and-overflow -->
+                    <Menu ToolBar.OverflowMode="Never"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowForm1}" IsChecked="{Binding Form1Visible}" Content="Show form 1"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowForm2}" IsChecked="{Binding Form2Visible}" Content="Show form 2"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowCounterPane}" IsChecked="{Binding CounterPaneVisible}" Content="Show counter pane"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowTabsPane}" IsChecked="{Binding TabsPaneVisible}" Content="Show tabs pane"/>
+                </ToolBar>
+            </TabItem>
+            <TabItem Header="Help">
+                <ToolBar ToolBarTray.IsLocked="True" Loaded="ToolBar_Loaded">
+                    <!-- https://stackoverflow.com/questions/1050953/wpf-toolbar-how-to-remove-grip-and-overflow -->
+                    <Menu ToolBar.OverflowMode="Never"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowHelpPane}" IsChecked="{Binding HelpPaneVisible}" Content="Show help pane"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowAboutPane}" IsChecked="{Binding AboutPaneVisible}" Content="Show about pane"/>
+                </ToolBar>
+            </TabItem>
+        </TabControl>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Rectangle Fill="LightSteelBlue"
@@ -46,6 +58,17 @@
                     <local:TabsPane
                             DataContext="{Binding TabsPane}"
                             Visibility="{Binding DataContext.TabsPaneVisible,
+                            RelativeSource={RelativeSource AncestorType=Window},
+                            Converter={StaticResource VisibilityConverter}}" />
+
+                    <local:HelpPane
+                            DataContext="{Binding HelpPane}"
+                            Visibility="{Binding DataContext.HelpPaneVisible,
+                            RelativeSource={RelativeSource AncestorType=Window},
+                            Converter={StaticResource VisibilityConverter}}" />
+                    <local:AboutPane
+                            DataContext="{Binding AboutPane}"
+                            Visibility="{Binding DataContext.AboutPaneVisible,
                             RelativeSource={RelativeSource AncestorType=Window},
                             Converter={StaticResource VisibilityConverter}}" />
                 </StackPanel>
