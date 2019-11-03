@@ -52,16 +52,16 @@ module MainWindow =
         match msg with
         | SetTabIndex tabIndex -> { m with TabIndex = tabIndex }, Cmd.none
 
-        | ShowForm1 -> { m with WorkPane = Some <| Form1 Form1.init }, Cmd.none
-        | ShowForm2 -> { m with WorkPane = Some <| Form2 Form2.init }, Cmd.none
+        | ShowForm1 -> { m with WorkPane = Form1.init |> Form1 |> Some }, Cmd.none
+        | ShowForm2 -> { m with WorkPane = Form2.init |> Form2 |> Some }, Cmd.none
         | ShowCounterPane ->
             let m', cmd' = CounterPane.init ()
-            { m with WorkPane = Some <| CounterPane m' }, cmd'
+            { m with WorkPane = CounterPane m' |> Some }, cmd'
         | ShowTabsPane ->
             let m', cmd' = TabsPane.init ()
-            { m with WorkPane = Some <| TabsPane m' }, cmd'
-        | ShowHelpContentPane -> { m with HelpPane = Some <| HelpContentPane HelpContentPane.init }, Cmd.none
-        | ShowAboutPane -> { m with HelpPane = Some <| AboutPane AboutPane.init }, Cmd.none
+            { m with WorkPane = TabsPane m' |> Some }, cmd'
+        | ShowHelpContentPane -> { m with HelpPane = HelpContentPane.init () |> HelpContentPane |> Some }, Cmd.none
+        | ShowAboutPane -> { m with HelpPane = AboutPane.init |> AboutPane |> Some }, Cmd.none
 
         | Form1Msg Form1.Submit -> { m with WorkPane = None }, Cmd.none
         | Form1Msg msg' ->

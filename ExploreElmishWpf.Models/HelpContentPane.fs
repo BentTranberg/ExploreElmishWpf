@@ -14,7 +14,7 @@ module HelpContentPane =
     type Msg =
         | Dummy
 
-    let init =
+    let init () =
         {
             ProofId = Guid.NewGuid()
         }

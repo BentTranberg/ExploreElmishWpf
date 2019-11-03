@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:ExploreElmishWpf"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+    <StackPanel Background="Bisque">
         <Label>Help content pane</Label>
-    </Grid>
+        <Label Content="{Binding ProofId}"></Label>
+    </StackPanel>
 </UserControl>
