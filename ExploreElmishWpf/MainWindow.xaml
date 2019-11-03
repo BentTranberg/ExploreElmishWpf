@@ -13,24 +13,32 @@
             <BooleanToVisibilityConverter x:Key="VisibilityConverter" />
         </ResourceDictionary>
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Key="F1" Command="{Binding ShowHelpContentPage}"/>
+        <KeyBinding Key="F3" Command="{Binding ShowForm1Page}"/>
+        <KeyBinding Key="F4" Command="{Binding ShowForm2Page}"/>
+        <KeyBinding Key="F6" Command="{Binding ShowCounterPage}"/>
+        <KeyBinding Key="F7" Command="{Binding ShowTabsPage}"/>
+        <KeyBinding Key="F10" Command="{Binding ShowAboutPage}"/>
+    </Window.InputBindings>
     <DockPanel>
         <TabControl DockPanel.Dock="Top" SelectedIndex="{Binding TabIndex}">
-            <TabItem Header="Work">
+            <TabItem Header="Work" IsTabStop="False">
                 <ToolBar ToolBarTray.IsLocked="True" Loaded="ToolBar_Loaded">
                     <!-- https://stackoverflow.com/questions/1050953/wpf-toolbar-how-to-remove-grip-and-overflow -->
                     <Menu ToolBar.OverflowMode="Never"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowForm1Page}" IsChecked="{Binding Form1PageVisible}" Content="Show form 1"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowForm2Page}" IsChecked="{Binding Form2PageVisible}" Content="Show form 2"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowCounterPage}" IsChecked="{Binding CounterPageVisible}" Content="Show counter demo"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowTabsPage}" IsChecked="{Binding TabsPageVisible}" Content="Show tabs demo"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowForm1Page}" IsChecked="{Binding Form1PageVisible}" Content="Show form 1 (F3)"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowForm2Page}" IsChecked="{Binding Form2PageVisible}" Content="Show form 2 (F4)"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowCounterPage}" IsChecked="{Binding CounterPageVisible}" Content="Show counter demo (F6)"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowTabsPage}" IsChecked="{Binding TabsPageVisible}" Content="Show tabs demo (F7)"/>
                 </ToolBar>
             </TabItem>
-            <TabItem Header="Help">
+            <TabItem Header="Help" IsTabStop="False">
                 <ToolBar ToolBarTray.IsLocked="True" Loaded="ToolBar_Loaded">
                     <!-- https://stackoverflow.com/questions/1050953/wpf-toolbar-how-to-remove-grip-and-overflow -->
                     <Menu ToolBar.OverflowMode="Never"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowHelpContentPage}" IsChecked="{Binding HelpContentPageVisible}" Content="Show help content page"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowAboutPage}" IsChecked="{Binding AboutPageVisible}" Content="Show about page"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowHelpContentPage}" IsChecked="{Binding HelpContentPageVisible}" Content="Show help content page (F1)"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowAboutPage}" IsChecked="{Binding AboutPageVisible}" Content="Show about page (F10)"/>
                 </ToolBar>
             </TabItem>
         </TabControl>

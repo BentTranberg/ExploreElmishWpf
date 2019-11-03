@@ -52,16 +52,34 @@ module MainWindow =
         match msg with
         | SetTabIndex tabIndex -> { m with TabIndex = tabIndex }, Cmd.none
 
-        | ShowForm1 -> { m with WorkPane = Form1.init |> Form1Page |> Some }, Cmd.none
-        | ShowForm2 -> { m with WorkPane = Form2.init |> Form2Page |> Some }, Cmd.none
+        | ShowForm1 ->
+            match m.WorkPane with
+            | Some (Form1Page _) -> { m with TabIndex = 0 }, Cmd.none
+            | _ -> { m with TabIndex = 0; WorkPane = Form1.init |> Form1Page |> Some }, Cmd.none
+        | ShowForm2 ->
+            match m.WorkPane with
+            | Some (Form2Page _) -> { m with TabIndex = 0 }, Cmd.none
+            | _ -> { m with TabIndex = 0; WorkPane = Form2.init |> Form2Page |> Some }, Cmd.none
         | ShowCounterPage ->
-            let m', cmd' = CounterDemo.init ()
-            { m with WorkPane = CounterPage m' |> Some }, cmd'
+            match m.WorkPane with
+            | Some (CounterPage _) -> { m with TabIndex = 0 }, Cmd.none
+            | _ ->
+                let m', cmd' = CounterDemo.init ()
+                { m with TabIndex = 0; WorkPane = CounterPage m' |> Some }, cmd'
         | ShowTabsPage ->
-            let m', cmd' = TabsDemo.init ()
-            { m with WorkPane = TabsPage m' |> Some }, cmd'
-        | ShowHelpContentPage -> { m with HelpPane = HelpContent.init () |> HelpContentPage |> Some }, Cmd.none
-        | ShowAboutPage -> { m with HelpPane = AboutBox.init |> AboutPage |> Some }, Cmd.none
+            match m.WorkPane with
+            | Some (TabsPage _) -> { m with TabIndex = 0 }, Cmd.none
+            | _ ->
+                let m', cmd' = TabsDemo.init ()
+                { m with TabIndex = 0; WorkPane = TabsPage m' |> Some }, cmd'
+        | ShowHelpContentPage ->
+            match m.HelpPane with
+            | Some (HelpContentPage _) -> { m with TabIndex = 1 }, Cmd.none
+            | _ -> { m with TabIndex = 1; HelpPane = HelpContent.init () |> HelpContentPage |> Some }, Cmd.none
+        | ShowAboutPage ->
+            match m.HelpPane with
+            | Some (AboutPage _) -> { m with TabIndex = 1 }, Cmd.none
+            | _ -> { m with TabIndex = 1; HelpPane = AboutBox.init |> AboutPage |> Some }, Cmd.none
 
         | Form1Msg Form1.Submit -> { m with WorkPane = None }, Cmd.none
         | Form1Msg msg' ->
