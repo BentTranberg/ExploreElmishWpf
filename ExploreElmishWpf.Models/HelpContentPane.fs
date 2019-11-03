@@ -1,22 +1,28 @@
 ﻿namespace ExploreElmishWpf.Models
 
-module HelpPane =
+module HelpContentPane =
 
     open System
     open Elmish
     open Elmish.WPF
 
-    type Model = unit
+    type Model =
+        {
+            ProofId: Guid
+        }
 
     type Msg =
         | Dummy
 
     let init =
-        ()
+        {
+            ProofId = Guid.NewGuid()
+        }
 
     let update msg m =
         m
 
     let bindings () : Binding<Model, Msg> list =
         [
+            "ProofId" |> Binding.oneWay (fun m -> string m.ProofId)
         ]

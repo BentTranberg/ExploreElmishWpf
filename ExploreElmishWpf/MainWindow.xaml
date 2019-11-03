@@ -14,7 +14,7 @@
         </ResourceDictionary>
     </Window.Resources>
     <DockPanel>
-        <TabControl DockPanel.Dock="Top">
+        <TabControl DockPanel.Dock="Top" SelectedIndex="{Binding TabIndex}">
             <TabItem Header="Work">
                 <ToolBar ToolBarTray.IsLocked="True" Loaded="ToolBar_Loaded">
                     <!-- https://stackoverflow.com/questions/1050953/wpf-toolbar-how-to-remove-grip-and-overflow -->
@@ -29,7 +29,7 @@
                 <ToolBar ToolBarTray.IsLocked="True" Loaded="ToolBar_Loaded">
                     <!-- https://stackoverflow.com/questions/1050953/wpf-toolbar-how-to-remove-grip-and-overflow -->
                     <Menu ToolBar.OverflowMode="Never"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowHelpPane}" IsChecked="{Binding HelpPaneVisible}" Content="Show help pane"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowHelpContentPane}" IsChecked="{Binding HelpContentPaneVisible}" Content="Show help content pane"/>
                     <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowAboutPane}" IsChecked="{Binding AboutPaneVisible}" Content="Show about pane"/>
                 </ToolBar>
             </TabItem>
@@ -37,9 +37,9 @@
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Rectangle Fill="LightSteelBlue"
-                        Visibility="{Binding NotPaneVisible, Converter={StaticResource VisibilityConverter}}" />
+                        Visibility="{Binding NoPanesVisible, Converter={StaticResource VisibilityConverter}}" />
                 <StackPanel
-                        Visibility="{Binding PaneVisible, Converter={StaticResource VisibilityConverter}}">
+                        Visibility="{Binding WorkPaneVisible, Converter={StaticResource VisibilityConverter}}">
                     <local:Form1
                             DataContext="{Binding Form1}"
                             Visibility="{Binding DataContext.Form1Visible,
@@ -60,10 +60,12 @@
                             Visibility="{Binding DataContext.TabsPaneVisible,
                             RelativeSource={RelativeSource AncestorType=Window},
                             Converter={StaticResource VisibilityConverter}}" />
-
-                    <local:HelpPane
-                            DataContext="{Binding HelpPane}"
-                            Visibility="{Binding DataContext.HelpPaneVisible,
+                </StackPanel>
+                <StackPanel
+                        Visibility="{Binding HelpPaneVisible, Converter={StaticResource VisibilityConverter}}">
+                    <local:HelpContentPane
+                            DataContext="{Binding HelpContentPane}"
+                            Visibility="{Binding DataContext.HelpContentPaneVisible,
                             RelativeSource={RelativeSource AncestorType=Window},
                             Converter={StaticResource VisibilityConverter}}" />
                     <local:AboutPane
