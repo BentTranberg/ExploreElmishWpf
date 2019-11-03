@@ -14,7 +14,7 @@
     <Compile Update="Form2.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="HelpContentPane.xaml.cs">
+    <Compile Update="HelpContent.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="TabsPane.xaml.cs">
@@ -34,7 +34,7 @@
     <Page Update="Form2.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="HelpContentPane.xaml">
+    <Page Update="HelpContent.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">

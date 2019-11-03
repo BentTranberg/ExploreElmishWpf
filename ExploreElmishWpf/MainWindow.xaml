@@ -29,7 +29,7 @@
                 <ToolBar ToolBarTray.IsLocked="True" Loaded="ToolBar_Loaded">
                     <!-- https://stackoverflow.com/questions/1050953/wpf-toolbar-how-to-remove-grip-and-overflow -->
                     <Menu ToolBar.OverflowMode="Never"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowHelpContentPane}" IsChecked="{Binding HelpContentPaneVisible}" Content="Show help content pane"/>
+                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowHelpContentPage}" IsChecked="{Binding HelpContentPageVisible}" Content="Show help content page"/>
                     <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowAboutPage}" IsChecked="{Binding AboutPageVisible}" Content="Show about page"/>
                 </ToolBar>
             </TabItem>
@@ -63,9 +63,9 @@
                 </StackPanel>
                 <StackPanel
                         Visibility="{Binding HelpPaneVisible, Converter={StaticResource VisibilityConverter}}">
-                    <local:HelpContentPane
-                            DataContext="{Binding HelpContentPane}"
-                            Visibility="{Binding DataContext.HelpContentPaneVisible,
+                    <local:HelpContent
+                            DataContext="{Binding HelpContentPage}"
+                            Visibility="{Binding DataContext.HelpContentPageVisible,
                             RelativeSource={RelativeSource AncestorType=Window},
                             Converter={StaticResource VisibilityConverter}}" />
                     <local:AboutBox

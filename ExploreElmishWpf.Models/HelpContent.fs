@@ -1,6 +1,6 @@
 ﻿namespace ExploreElmishWpf.Models
 
-module HelpContentPane =
+module HelpContent =
 
     open System
     open Elmish

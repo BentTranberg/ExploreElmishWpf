@@ -14,11 +14,11 @@ using System.Windows.Shapes;
 namespace ExploreElmishWpf
 {
     /// <summary>
-    /// Interaction logic for HelpContentPane.xaml
+    /// Interaction logic for HelpContent.xaml
     /// </summary>
-    public partial class HelpContentPane : UserControl
+    public partial class HelpContent : UserControl
     {
-        public HelpContentPane()
+        public HelpContent()
         {
             InitializeComponent();
         }
