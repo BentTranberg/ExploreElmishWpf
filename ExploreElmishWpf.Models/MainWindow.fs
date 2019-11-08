@@ -4,62 +4,35 @@ module MainWindow =
 
     open System
     open System.Windows
+    open System.Windows.Media
     open Elmish
     open Elmish.WPF
 
-    type WorkPane =
-        | Form1Page of Form1.Model
-        | Form2Page of Form2.Model
-        | CounterPage of CounterDemo.Model
-        | TabsPage of TabsDemo.Model
+    let newGuid () = Guid.NewGuid()
 
-    type HelpPane =
-        | HelpContentPage of HelpContent.Model
-        | AboutPage of AboutBox.Model
-
-    type Model =
+    type Toolbutton =
         {
-            TabIndex: int
-            WorkPane: WorkPane option
-            HelpPane: HelpPane option
+            Id: Guid
+            Text: string
+            IsMarkable: bool
         }
-        with
-            member x.form1Page = match x.WorkPane with Some (Form1Page page) -> Some page | _ -> None
-            member x.form2Page = match x.WorkPane with Some (Form2Page page) -> Some page | _ -> None
-            member x.counterPage = match x.WorkPane with Some (CounterPage page) -> Some page | _ -> None
-            member x.tabsPage = match x.WorkPane with Some (TabsPage page) -> Some page | _ -> None
-            member x.helpContentPage = match x.HelpPane with Some (HelpContentPage page) -> Some page | _ -> None
-            member x.aboutPage = match x.HelpPane with Some (AboutPage page) -> Some page | _ -> None
 
-    let showTab0 m = { m with TabIndex = 0 }
-    let showTab1 m = { m with TabIndex = 1 }
-    let clearWorkPane m = { m with WorkPane = None }
-    let clearWorkPaneCmd m = { m with WorkPane = None }, Cmd.none
-    let setWorkPaneIf cond f m = if cond then { m with WorkPane = Some (f ()) } else m
-    let setHelpPaneIf cond f m = if cond then { m with HelpPane = Some (f ()) } else m
-    let setWorkPaneCmdIf cond f m =
-        if cond then
-            let m', c' = f ()
-            { m with WorkPane = Some m' }, c'
-        else
-            m, Cmd.none
-
-    let init () =
+    type Tab =
         {
-            TabIndex = 0
-            WorkPane = None
-            HelpPane = None
-        }, Cmd.none
+            Id: Guid
+            Header: string
+            Toolbuttons: Toolbutton list
+        }
 
     type Msg =
-        | SetTabIndex of tabIndex: int
+        | ButtonClick of id: Guid
 
         | ShowForm1
         | ShowForm2
-        | ShowCounterPage
-        | ShowTabsPage
-        | ShowHelpContentPage
-        | ShowAboutPage
+        | ShowCounter
+        | ShowTabs
+        | ShowHelp
+        | ShowAbout
 
         | Form1Msg of Form1.Msg
         | Form2Msg of Form2.Msg
@@ -68,85 +41,168 @@ module MainWindow =
         | HelpContentPageMsg of HelpContent.Msg
         | AboutPageMsg of AboutBox.Msg
 
+    type Model =
+        {
+            Tabs: Tab list
+            MarkedButton: Guid
+            Form1Page: Form1.Model option
+            Form2Page: Form2.Model option
+            CounterPage: CounterDemo.Model option
+            TabsPage: TabsDemo.Model option
+            HelpContentPage: HelpContent.Model option
+            AboutPage: AboutBox.Model option
+        }
+        with
+            member x.somePageIsVisible =
+                x.Form1Page.IsSome || x.Form2Page.IsSome || x.CounterPage.IsSome
+                    || x.TabsPage.IsSome || x.HelpContentPage.IsSome || x.AboutPage.IsSome
+
+    let tbNone = newGuid ()
+    let tbForm1 = newGuid ()
+    let tbForm2 = newGuid ()
+    let tbCounter = newGuid ()
+    let tbTabs = newGuid ()
+    let tbHelpContents = newGuid ()
+    let tbAbout = newGuid ()
+    let tbLink = newGuid ()
+
+    let tabs =
+        let tab header toolButtons =
+            { Id = newGuid (); Header = header; Toolbuttons = toolButtons }
+        let toolbutton id text isMarkable =
+            { Id = id; Text = text; IsMarkable = isMarkable }
+        let menu = [
+            toolbutton tbForm1 "Form1" true
+            toolbutton tbForm2 "Form2" true
+            toolbutton tbCounter "Counter" true
+            toolbutton tbTabs "Tabs" true
+            ]
+        let help = [
+            toolbutton tbHelpContents "Help contents" true
+            toolbutton tbAbout "About" true
+            toolbutton tbLink "Web" false
+            ]
+        [ tab "Menu" menu; tab "Help" help ]
+
+    let startModel =
+        {
+            Tabs = tabs
+            MarkedButton = tbForm1
+            Form1Page = None
+            Form2Page = None
+            CounterPage = None
+            TabsPage = None
+            HelpContentPage = None
+            AboutPage = None
+        }
+
+    let init () = startModel, Cmd.ofMsg ShowForm1
+
+    let findButton (id: Guid) (m: Model) =
+        m.Tabs |> List.tryPick (fun tab -> tab.Toolbuttons |> List.tryFind (fun tb -> tb.Id = id))
+
     let update msg m =
         match msg with
-        | SetTabIndex tabIndex -> { m with TabIndex = tabIndex }, Cmd.none
+        | ButtonClick id ->
+            match findButton id m with
+            | None -> m, Cmd.none
+            | Some clickedButton ->
+                let m = if clickedButton.IsMarkable then { m with MarkedButton = id } else m
+                if clickedButton.Id = tbForm1 then m, Cmd.ofMsg ShowForm1
+                elif clickedButton.Id = tbForm2 then m, Cmd.ofMsg ShowForm2
+                elif clickedButton.Id = tbCounter then m, Cmd.ofMsg ShowCounter
+                elif clickedButton.Id = tbTabs then m, Cmd.ofMsg ShowTabs
+                elif clickedButton.Id = tbHelpContents then m, Cmd.ofMsg ShowHelp
+                elif clickedButton.Id = tbAbout then m, Cmd.ofMsg ShowAbout
+                elif clickedButton.Id = tbLink then m, Cmd.none // TODO
+                else m, Cmd.none
 
-        | ShowForm1 -> m |> showTab0 |> setWorkPaneIf m.form1Page.IsNone (fun () -> Form1.init |> Form1Page), Cmd.none
-        | ShowForm2 -> m |> showTab0 |> setWorkPaneIf m.form2Page.IsNone (fun () -> Form2.init |> Form2Page), Cmd.none
-        | ShowCounterPage -> m |> showTab0 |> setWorkPaneCmdIf m.counterPage.IsNone (fun () ->
-                let m', c' = CounterDemo.init ()
-                CounterPage m', c')
-        | ShowTabsPage -> m |> showTab0 |> setWorkPaneCmdIf m.tabsPage.IsNone (fun () ->
-                let m', c' = TabsDemo.init ()
-                TabsPage m', c')
-        | ShowHelpContentPage -> m |> showTab1 |> setHelpPaneIf m.helpContentPage.IsNone (HelpContent.init >> HelpContentPage), Cmd.none
-        | ShowAboutPage -> m |> showTab1 |> setHelpPaneIf m.aboutPage.IsNone (fun () -> AboutBox.init |> AboutPage), Cmd.none
-
-        | Form1Msg Form1.Submit -> clearWorkPaneCmd m
+        | ShowForm1 ->
+            match m.Form1Page with
+            | None -> { m with Form1Page = Some Form1.init }, Cmd.none
+            | Some _ -> m, Cmd.none
+        | ShowForm2 ->
+            match m.Form2Page with
+            | None -> { m with Form2Page = Some Form2.init }, Cmd.none
+            | Some _ -> m, Cmd.none
+        | ShowCounter ->
+            match m.CounterPage with
+            | None -> CounterDemo.init () |> (fun (m', c') -> { m with CounterPage = Some m' }, Cmd.map CounterPageMsg c')
+            | Some _ -> m, Cmd.none
+        | ShowTabs ->
+            match m.TabsPage with
+            | None -> TabsDemo.init () |> (fun (m', c') -> { m with TabsPage = Some m' }, Cmd.map TabsPageMsg c')
+            | Some _ -> m, Cmd.none
+        | ShowHelp ->
+            match m.HelpContentPage with
+            | None -> { m with HelpContentPage = HelpContent.init () |> Some }, Cmd.none
+            | Some _ -> m, Cmd.none
+        | ShowAbout ->
+            match m.AboutPage with
+            | None -> { m with AboutPage = AboutBox.init |> Some }, Cmd.none
+            | Some _ -> m, Cmd.none
+        | Form1Msg Form1.Submit -> { m with MarkedButton = tbNone; Form1Page = None }, Cmd.none
         | Form1Msg msg' ->
-            match m.form1Page with
-            | Some m' -> { m with WorkPane = Form1.update msg' m' |> Form1Page |> Some }, Cmd.none
-            | _ -> m, Cmd.none
-        | Form2Msg Form2.Submit -> clearWorkPaneCmd m
+            match m.Form1Page with
+            | None -> m, Cmd.none
+            | Some m' -> Form1.update msg' m' |> (fun m' -> { m with Form1Page = Some m' }, Cmd.none)
+        | Form2Msg Form2.Submit -> { m with MarkedButton = tbNone; Form2Page = None }, Cmd.none
         | Form2Msg msg' ->
-            match m.form2Page with
-            | Some m' -> { m with WorkPane = Form2.update msg' m' |> Form2Page |> Some }, Cmd.none
-            | _ -> m, Cmd.none
-        | CounterPageMsg CounterDemo.Close -> clearWorkPaneCmd m
-        | CounterPageMsg counterPageMsg ->
-            match m.counterPage with
-            | Some m' ->
-                let pane, paneCmd = CounterDemo.update counterPageMsg m'
-                { m with WorkPane = pane |> CounterPage |> Some }, paneCmd
-            | _ -> m, Cmd.none
-        | TabsPageMsg TabsDemo.Close -> clearWorkPaneCmd m
-        | TabsPageMsg tabsPageMsg ->
-            match m.tabsPage with
-            | Some m' ->
-                let pane, paneCmd = TabsDemo.update tabsPageMsg m'
-                { m with WorkPane = pane |> TabsPage |> Some }, paneCmd
-            | _ -> m, Cmd.none
+            match m.Form2Page with
+            | None -> m, Cmd.none
+            | Some m' -> Form2.update msg' m' |> (fun m' -> { m with Form2Page = Some m' }, Cmd.none)
+        | CounterPageMsg CounterDemo.Close -> { m with MarkedButton = tbNone; CounterPage = None }, Cmd.none
+        | CounterPageMsg msg' ->
+            match m.CounterPage with
+            | None -> m, Cmd.none
+            | Some m' -> CounterDemo.update msg' m' |> (fun (m', c') -> { m with CounterPage = Some m' }, Cmd.map CounterPageMsg c')
+        | TabsPageMsg TabsDemo.Close -> { m with MarkedButton = tbNone; TabsPage = None }, Cmd.none
+        | TabsPageMsg msg' ->
+            match m.TabsPage with
+            | None -> m, Cmd.none
+            | Some m' -> TabsDemo.update msg' m' |> (fun (m', c') -> { m with TabsPage = Some m' }, Cmd.map TabsPageMsg c')
         | HelpContentPageMsg msg' ->
-            match m.helpContentPage with
-            | Some m' -> { m with HelpPane = HelpContent.update msg' m' |> HelpContentPage |> Some }, Cmd.none
-            | _ -> m, Cmd.none
+            match m.HelpContentPage with
+            | None -> m, Cmd.none
+            | Some m' -> HelpContent.update msg' m' |> (fun m' -> { m with HelpContentPage = Some m' }, Cmd.none)
         | AboutPageMsg msg' ->
-            match m.aboutPage with
-            | Some m' -> { m with HelpPane = AboutBox.update msg' m' |> AboutPage |> Some }, Cmd.none
-            | _ -> m, Cmd.none
+            match m.AboutPage with
+            | None -> m, Cmd.none
+            | Some m' -> AboutBox.update msg' m' |> (fun m' -> { m with AboutPage = Some m' }, Cmd.none)
 
     let bindings (model: Model) dispatch : Binding<Model, Msg> list =
         [
-            "TabIndex" |> Binding.twoWay ((fun m -> m.TabIndex), (fun tabIndex -> SetTabIndex tabIndex))
-            "NoPanesVisible" |> Binding.oneWay (fun m -> m.WorkPane.IsNone && m.TabIndex = 0 || m.HelpPane.IsNone && m.TabIndex = 1)
-            "WorkPaneVisible" |> Binding.oneWay (fun m -> m.WorkPane.IsSome && m.TabIndex = 0)
-            "HelpPaneVisible" |> Binding.oneWay (fun m -> m.HelpPane.IsSome && m.TabIndex = 1)
+            "Tabs" |> Binding.subModelSeq((fun m -> m.Tabs), (fun t -> t), fun () ->
+                [
+                    "Id" |> Binding.oneWay (fun (_, t) -> t.Id)
+                    "Header" |> Binding.oneWay (fun (_, t) -> t.Header)
+                    "Toolbuttons" |> Binding.subModelSeq((fun (_, t) -> t.Toolbuttons), (fun t -> t), fun () ->
+                        [
+                            "Id" |> Binding.oneWay (fun (_, t) -> t.Id)
+                            "Text" |> Binding.oneWay (fun (_, t) -> t.Text)
+                            // "ImageSource" |> Binding.oneWay (fun (_, t) -> t.ImageSource)
+                            "Foreground" |> Binding.oneWay (fun (_, t) -> Brushes.Green)
+                            "ButtonClick" |> Binding.cmd (fun (_, (t: Toolbutton)) -> ButtonClick t.Id)
+                            "MarkerVisible" |> Binding.oneWay (fun ((m, tab), tb) -> tb.Id = m.MarkedButton && m.somePageIsVisible)
+                        ])
+                ])
+            "Form1Page" |> Binding.subModelOpt ((fun (m: Model) -> m.Form1Page), snd, Form1Msg, Form1.bindings)
+            "Form2Page" |> Binding.subModelOpt ((fun (m: Model) -> m.Form2Page), snd, Form2Msg, Form2.bindings)
+            "CounterPage" |> Binding.subModelOpt ((fun (m: Model) -> m.CounterPage), snd, CounterPageMsg, CounterDemo.bindings)
+            "TabsPage" |> Binding.subModelOpt ((fun (m: Model) -> m.TabsPage), snd, TabsPageMsg, TabsDemo.bindings)
+            "HelpContentPage" |> Binding.subModelOpt ((fun (m: Model) -> m.HelpContentPage), snd, HelpContentPageMsg, HelpContent.bindings)
+            "AboutPage" |> Binding.subModelOpt ((fun (m: Model) -> m.AboutPage), snd, AboutPageMsg, AboutBox.bindings)
 
-            "ShowForm1Page" |> Binding.cmd ShowForm1
-            "ShowForm2Page" |> Binding.cmd ShowForm2
-            "ShowCounterPage" |> Binding.cmd ShowCounterPage
-            "ShowTabsPage" |> Binding.cmd ShowTabsPage
-            "ShowHelpContentPage" |> Binding.cmd ShowHelpContentPage
-            "ShowAboutPage" |> Binding.cmd ShowAboutPage
-
-            "Form1PageVisible" |> Binding.oneWay (fun m -> m.form1Page.IsSome)
-            "Form2PageVisible" |> Binding.oneWay (fun m -> m.form2Page.IsSome)
-            "CounterPageVisible" |> Binding.oneWay (fun m -> m.counterPage.IsSome)
-            "TabsPageVisible" |> Binding.oneWay (fun m -> m.tabsPage.IsSome)
-            "HelpContentPageVisible" |> Binding.oneWay (fun m -> m.helpContentPage.IsSome)
-            "AboutPageVisible" |> Binding.oneWay (fun m -> m.aboutPage.IsSome)
-
-            "Form1Page" |> Binding.subModelOpt ((fun (m: Model) -> m.form1Page), snd, Form1Msg, Form1.bindings)
-            "Form2Page" |> Binding.subModelOpt ((fun (m: Model) -> m.form2Page), snd, Form2Msg, Form2.bindings)
-            "CounterPage" |> Binding.subModelOpt ((fun (m: Model) -> m.counterPage), snd, CounterPageMsg, CounterDemo.bindings)
-            "TabsPage" |> Binding.subModelOpt ((fun (m: Model) -> m.tabsPage), snd, TabsPageMsg, TabsDemo.bindings)
-            "HelpContentPage" |> Binding.subModelOpt ((fun (m: Model) -> m.helpContentPage), snd, HelpContentPageMsg, HelpContent.bindings)
-            "AboutPage" |> Binding.subModelOpt ((fun (m: Model) -> m.aboutPage), snd, AboutPageMsg, AboutBox.bindings)
+            "Form1PageVisible" |> Binding.oneWay (fun m -> m.MarkedButton = tbForm1 && m.Form1Page.IsSome)
+            "Form2PageVisible" |> Binding.oneWay (fun m -> m.MarkedButton = tbForm2 && m.Form2Page.IsSome)
+            "CounterPageVisible" |> Binding.oneWay (fun m -> m.MarkedButton = tbCounter && m.CounterPage.IsSome)
+            "TabsPageVisible" |> Binding.oneWay (fun m -> m.MarkedButton = tbTabs && m.TabsPage.IsSome)
+            "HelpContentPageVisible" |> Binding.oneWay (fun m -> m.MarkedButton = tbHelpContents && m.HelpContentPage.IsSome)
+            "AboutPageVisible" |> Binding.oneWay (fun m -> m.MarkedButton = tbAbout && m.AboutPage.IsSome)
         ]
 
     let designTimeModel =
-        let model = { TabIndex = 0; WorkPane = None; HelpPane = None }
+        let model = startModel
         let dispatch = fun _ -> ()
         ViewModel.designInstance model (bindings model dispatch)
 

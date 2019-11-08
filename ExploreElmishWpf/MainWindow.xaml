@@ -11,6 +11,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="VisibilityConverter" />
+            <local:BoolToVisibilityConverter x:Key="HiddenConverter" TrueValue="Visible" FalseValue="Hidden"/>
         </ResourceDictionary>
     </Window.Resources>
     <Window.InputBindings>
@@ -22,66 +23,40 @@
         <KeyBinding Key="F10" Command="{Binding ShowAboutPage}"/>
     </Window.InputBindings>
     <DockPanel>
-        <TabControl DockPanel.Dock="Top" SelectedIndex="{Binding TabIndex}">
-            <TabItem Header="Work" IsTabStop="False">
-                <ToolBar ToolBarTray.IsLocked="True" Loaded="ToolBar_Loaded">
-                    <!-- https://stackoverflow.com/questions/1050953/wpf-toolbar-how-to-remove-grip-and-overflow -->
-                    <Menu ToolBar.OverflowMode="Never"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowForm1Page}" IsChecked="{Binding Form1PageVisible}" Content="Show form 1 (F3)"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowForm2Page}" IsChecked="{Binding Form2PageVisible}" Content="Show form 2 (F4)"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowCounterPage}" IsChecked="{Binding CounterPageVisible}" Content="Show counter demo (F6)"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowTabsPage}" IsChecked="{Binding TabsPageVisible}" Content="Show tabs demo (F7)"/>
-                </ToolBar>
-            </TabItem>
-            <TabItem Header="Help" IsTabStop="False">
-                <ToolBar ToolBarTray.IsLocked="True" Loaded="ToolBar_Loaded">
-                    <!-- https://stackoverflow.com/questions/1050953/wpf-toolbar-how-to-remove-grip-and-overflow -->
-                    <Menu ToolBar.OverflowMode="Never"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowHelpContentPage}" IsChecked="{Binding HelpContentPageVisible}" Content="Show help content page (F1)"/>
-                    <RadioButton GroupName="A" IsTabStop="False" Command="{Binding ShowAboutPage}" IsChecked="{Binding AboutPageVisible}" Content="Show about page (F10)"/>
-                </ToolBar>
-            </TabItem>
+        <TabControl DockPanel.Dock="Top" ItemsSource="{Binding Tabs}" SelectedIndex="0">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Header}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ToolBar ItemsSource="{Binding Toolbuttons}" ToolBarTray.IsLocked="True" Background="White" Loaded="ToolBar_Loaded">
+                        <ToolBar.ItemTemplate>
+                            <DataTemplate>
+                                <Button Background="White" Command="{Binding ButtonClick}" IsTabStop="False" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                                    <Button.Content>
+                                        <StackPanel Margin="4">
+                                            <Image Stretch="None" Source="{Binding ImageSource}"/>
+                                            <TextBlock Text="{Binding Text}" Foreground="{Binding Foreground}" HorizontalAlignment="Center"/>
+                                            <Border BorderThickness="0.6" Margin="0 2 0 0" BorderBrush="Blue" Visibility="{Binding MarkerVisible, Converter={StaticResource HiddenConverter}}"/>
+                                        </StackPanel>
+                                    </Button.Content>
+                                </Button>
+                            </DataTemplate>
+                        </ToolBar.ItemTemplate>
+                    </ToolBar>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
         </TabControl>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Grid>
-                <Rectangle Fill="LightSteelBlue"
-                        Visibility="{Binding NoPanesVisible, Converter={StaticResource VisibilityConverter}}" />
-                <StackPanel
-                        Visibility="{Binding WorkPaneVisible, Converter={StaticResource VisibilityConverter}}">
-                    <local:Form1
-                            DataContext="{Binding Form1Page}"
-                            Visibility="{Binding DataContext.Form1PageVisible,
-                            RelativeSource={RelativeSource AncestorType=Window},
-                            Converter={StaticResource VisibilityConverter}}" />
-                    <local:Form2
-                            DataContext="{Binding Form2Page}"
-                            Visibility="{Binding DataContext.Form2PageVisible,
-                            RelativeSource={RelativeSource AncestorType=Window},
-                            Converter={StaticResource VisibilityConverter}}" />
-                    <local:CounterDemo
-                            DataContext="{Binding CounterPage}"
-                            Visibility="{Binding DataContext.CounterPageVisible,
-                            RelativeSource={RelativeSource AncestorType=Window},
-                            Converter={StaticResource VisibilityConverter}}" />
-                    <local:TabsDemo
-                            DataContext="{Binding TabsPage}"
-                            Visibility="{Binding DataContext.TabsPageVisible,
-                            RelativeSource={RelativeSource AncestorType=Window},
-                            Converter={StaticResource VisibilityConverter}}" />
-                </StackPanel>
-                <StackPanel
-                        Visibility="{Binding HelpPaneVisible, Converter={StaticResource VisibilityConverter}}">
-                    <local:HelpContent
-                            DataContext="{Binding HelpContentPage}"
-                            Visibility="{Binding DataContext.HelpContentPageVisible,
-                            RelativeSource={RelativeSource AncestorType=Window},
-                            Converter={StaticResource VisibilityConverter}}" />
-                    <local:AboutBox
-                            DataContext="{Binding AboutPage}"
-                            Visibility="{Binding DataContext.AboutPageVisible,
-                            RelativeSource={RelativeSource AncestorType=Window},
-                            Converter={StaticResource VisibilityConverter}}" />
-                </StackPanel>
+            <Grid Background="LightGray">
+                <local:Form1 DataContext="{Binding Form1Page}" Visibility="{Binding DataContext.Form1PageVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource VisibilityConverter}}" />
+                <local:Form2 DataContext="{Binding Form2Page}" Visibility="{Binding DataContext.Form2PageVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource VisibilityConverter}}" />
+                <local:CounterDemo DataContext="{Binding CounterPage}" Visibility="{Binding DataContext.CounterPageVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource VisibilityConverter}}" />
+                <local:TabsDemo DataContext="{Binding TabsPage}" Visibility="{Binding DataContext.TabsPageVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource VisibilityConverter}}" />
+                <local:HelpContent DataContext="{Binding HelpContentPage}" Visibility="{Binding DataContext.HelpContentPageVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource VisibilityConverter}}" />
+                <local:AboutBox DataContext="{Binding AboutPage}" Visibility="{Binding DataContext.AboutPageVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource VisibilityConverter}}" />
             </Grid>
         </ScrollViewer>
     </DockPanel>
