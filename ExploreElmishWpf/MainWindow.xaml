@@ -55,6 +55,7 @@
                 <local:Form2 DataContext="{Binding Form2Page}" Visibility="{Binding DataContext.Form2PageVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource VisibilityConverter}}" />
                 <local:CounterDemo DataContext="{Binding CounterPage}" Visibility="{Binding DataContext.CounterPageVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource VisibilityConverter}}" />
                 <local:TabsDemo DataContext="{Binding TabsPage}" Visibility="{Binding DataContext.TabsPageVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource VisibilityConverter}}" />
+                <local:MultiSelectDemo DataContext="{Binding MultiSelectPage}" Visibility="{Binding DataContext.MultiSelectPageVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource VisibilityConverter}}" />
                 <local:HelpContent DataContext="{Binding HelpContentPage}" Visibility="{Binding DataContext.HelpContentPageVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource VisibilityConverter}}" />
                 <local:AboutBox DataContext="{Binding AboutPage}" Visibility="{Binding DataContext.AboutPageVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource VisibilityConverter}}" />
             </Grid>

@@ -31,6 +31,7 @@ module MainWindow =
         | ShowForm2
         | ShowCounter
         | ShowTabs
+        | ShowMultiSelect
         | ShowHelp
         | ShowAbout
 
@@ -38,6 +39,7 @@ module MainWindow =
         | Form2Msg of Form2.Msg
         | CounterPageMsg of CounterDemo.Msg
         | TabsPageMsg of TabsDemo.Msg
+        | MultiSelectPageMsg of MultiSelectDemo.Msg
         | HelpContentPageMsg of HelpContent.Msg
         | AboutPageMsg of AboutBox.Msg
 
@@ -49,19 +51,22 @@ module MainWindow =
             Form2Page: Form2.Model option
             CounterPage: CounterDemo.Model option
             TabsPage: TabsDemo.Model option
+            MultiSelectPage: MultiSelectDemo.Model option
             HelpContentPage: HelpContent.Model option
             AboutPage: AboutBox.Model option
         }
         with
             member x.somePageIsVisible =
                 x.Form1Page.IsSome || x.Form2Page.IsSome || x.CounterPage.IsSome
-                    || x.TabsPage.IsSome || x.HelpContentPage.IsSome || x.AboutPage.IsSome
+                    || x.TabsPage.IsSome || x.MultiSelectPage.IsSome
+                    || x.HelpContentPage.IsSome || x.AboutPage.IsSome
 
     let tbNone = newGuid ()
     let tbForm1 = newGuid ()
     let tbForm2 = newGuid ()
     let tbCounter = newGuid ()
     let tbTabs = newGuid ()
+    let tbMultiSelect = newGuid ()
     let tbHelpContents = newGuid ()
     let tbAbout = newGuid ()
     let tbLink = newGuid ()
@@ -76,6 +81,7 @@ module MainWindow =
             toolbutton tbForm2 "Form2" true
             toolbutton tbCounter "Counter" true
             toolbutton tbTabs "Tabs" true
+            toolbutton tbMultiSelect "Multiselect" true
             ]
         let help = [
             toolbutton tbHelpContents "Help contents" true
@@ -92,6 +98,7 @@ module MainWindow =
             Form2Page = None
             CounterPage = None
             TabsPage = None
+            MultiSelectPage = None
             HelpContentPage = None
             AboutPage = None
         }
@@ -112,6 +119,7 @@ module MainWindow =
                 elif clickedButton.Id = tbForm2 then m, Cmd.ofMsg ShowForm2
                 elif clickedButton.Id = tbCounter then m, Cmd.ofMsg ShowCounter
                 elif clickedButton.Id = tbTabs then m, Cmd.ofMsg ShowTabs
+                elif clickedButton.Id = tbMultiSelect then m, Cmd.ofMsg ShowMultiSelect
                 elif clickedButton.Id = tbHelpContents then m, Cmd.ofMsg ShowHelp
                 elif clickedButton.Id = tbAbout then m, Cmd.ofMsg ShowAbout
                 elif clickedButton.Id = tbLink then m, Cmd.none // TODO
@@ -132,6 +140,10 @@ module MainWindow =
         | ShowTabs ->
             match m.TabsPage with
             | None -> TabsDemo.init () |> (fun (m', c') -> { m with TabsPage = Some m' }, Cmd.map TabsPageMsg c')
+            | Some _ -> m, Cmd.none
+        | ShowMultiSelect ->
+            match m.MultiSelectPage with
+            | None -> MultiSelectDemo.init () |> (fun (m', c') -> { m with MultiSelectPage = Some m' }, Cmd.map MultiSelectPageMsg c')
             | Some _ -> m, Cmd.none
         | ShowHelp ->
             match m.HelpContentPage with
@@ -161,6 +173,10 @@ module MainWindow =
             match m.TabsPage with
             | None -> m, Cmd.none
             | Some m' -> TabsDemo.update msg' m' |> (fun (m', c') -> { m with TabsPage = Some m' }, Cmd.map TabsPageMsg c')
+        | MultiSelectPageMsg msg' ->
+            match m.MultiSelectPage with
+            | None -> m, Cmd.none
+            | Some m' -> MultiSelectDemo.update msg' m' |> (fun (m', c') -> { m with MultiSelectPage = Some m' }, Cmd.map MultiSelectPageMsg c')
         | HelpContentPageMsg msg' ->
             match m.HelpContentPage with
             | None -> m, Cmd.none
@@ -190,6 +206,7 @@ module MainWindow =
             "Form2Page" |> Binding.subModelOpt ((fun (m: Model) -> m.Form2Page), snd, Form2Msg, Form2.bindings)
             "CounterPage" |> Binding.subModelOpt ((fun (m: Model) -> m.CounterPage), snd, CounterPageMsg, CounterDemo.bindings)
             "TabsPage" |> Binding.subModelOpt ((fun (m: Model) -> m.TabsPage), snd, TabsPageMsg, TabsDemo.bindings)
+            "MultiSelectPage" |> Binding.subModelOpt ((fun (m: Model) -> m.MultiSelectPage), snd, MultiSelectPageMsg, MultiSelectDemo.bindings)
             "HelpContentPage" |> Binding.subModelOpt ((fun (m: Model) -> m.HelpContentPage), snd, HelpContentPageMsg, HelpContent.bindings)
             "AboutPage" |> Binding.subModelOpt ((fun (m: Model) -> m.AboutPage), snd, AboutPageMsg, AboutBox.bindings)
 
@@ -197,6 +214,7 @@ module MainWindow =
             "Form2PageVisible" |> Binding.oneWay (fun m -> m.MarkedButton = tbForm2 && m.Form2Page.IsSome)
             "CounterPageVisible" |> Binding.oneWay (fun m -> m.MarkedButton = tbCounter && m.CounterPage.IsSome)
             "TabsPageVisible" |> Binding.oneWay (fun m -> m.MarkedButton = tbTabs && m.TabsPage.IsSome)
+            "MultiSelectPageVisible" |> Binding.oneWay (fun m -> m.MarkedButton = tbMultiSelect && m.MultiSelectPage.IsSome)
             "HelpContentPageVisible" |> Binding.oneWay (fun m -> m.MarkedButton = tbHelpContents && m.HelpContentPage.IsSome)
             "AboutPageVisible" |> Binding.oneWay (fun m -> m.MarkedButton = tbAbout && m.AboutPage.IsSome)
         ]

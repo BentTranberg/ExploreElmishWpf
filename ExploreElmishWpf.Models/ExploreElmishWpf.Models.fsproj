@@ -12,6 +12,7 @@
     <Compile Include="Form1.fs" />
     <Compile Include="Form2.fs" />
     <Compile Include="TabsDemo.fs" />
+    <Compile Include="MultiSelectDemo.fs" />
     <Compile Include="MainWindow.fs" />
   </ItemGroup>
 
