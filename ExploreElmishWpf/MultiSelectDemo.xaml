@@ -12,24 +12,14 @@
         <ListBox ItemsSource="{Binding Lines}" SelectionMode="Extended">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel>
-                        <CheckBox x:Name="cb"
-                            Content="{Binding DisplayText}"
-                            IsChecked="{Binding Marked, Mode=TwoWay}">
-                        </CheckBox>
-                    </StackPanel>
-                    <DataTemplate.Triggers>
-                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor,
-                                AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="true">
-                            <Setter TargetName="cb" Property="IsChecked" Value="true"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor,
-                                AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="false">
-                            <Setter TargetName="cb" Property="IsChecked" Value="false"/>
-                        </DataTrigger>
-                    </DataTemplate.Triggers>
+                    <Label Content="{Binding DisplayText}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="IsSelected" Value="{Binding Marked, Mode=OneWayToSource}"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
         </ListBox>
     </Grid>
 </UserControl>

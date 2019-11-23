@@ -49,23 +49,17 @@ module MultiSelectDemo =
                         line)
             { m with Lines = lines }, Cmd.none
 
-    let setMarked marked (_, line) =
-        let x = 0 // just to be able to set breakpoint here
-        SetMarked (line.Id, marked)
-
-    let getMarked (_, line) =
-        line.Marked
-
     let bindings () : Binding<Model, Msg> list =
         [
             "Lines" |> Binding.subModelSeq((fun m -> m.Lines), (fun line -> line), fun () ->
                 [
                     "Id" |> Binding.oneWay (fun (_, line) -> line.Id)
                     "Marked" |> Binding.twoWay (
-                        getMarked,
-                        setMarked
+                        (fun (m, line) -> line.Marked),
+                        (fun marked (m, line) -> SetMarked (line.Id, marked))
                         )
-                    "DisplayText" |> Binding.oneWay (fun (_, line) -> line.DisplayText)
+                    "DisplayText" |> Binding.oneWay (fun (_, line) ->
+                        line.DisplayText + (if line.Marked then " is checked" else " is not checked"))
                 ])
         ]
 
