@@ -12,7 +12,11 @@
         <ListBox ItemsSource="{Binding Lines}" SelectionMode="Extended">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Label Content="{Binding DisplayText}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="{Binding Id}"/>
+                        <CheckBox x:Name="cb" IsEnabled="False" IsChecked="{Binding Marked, Mode=OneWay}" Background="LightGreen"/>
+                        <Label Content="{Binding DisplayText}" Background="LightBlue"/>
+                    </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <ListBox.ItemContainerStyle>

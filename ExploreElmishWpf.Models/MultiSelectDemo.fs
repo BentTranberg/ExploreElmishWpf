@@ -22,42 +22,33 @@ module MultiSelectDemo =
         | SetMarked of Guid * bool
 
     let init () =
+        let line marked text = { Id = Guid.NewGuid(); Marked = marked; DisplayText = text }
         {
             Lines = [
-                { Id = Guid.NewGuid(); Marked = false; DisplayText = "Zero" }
-                { Id = Guid.NewGuid(); Marked = true; DisplayText = "One" }
-                { Id = Guid.NewGuid(); Marked = false; DisplayText = "Two" }
-                { Id = Guid.NewGuid(); Marked = true; DisplayText = "Three" }
-                { Id = Guid.NewGuid(); Marked = false; DisplayText = "Four" }
-                { Id = Guid.NewGuid(); Marked = false; DisplayText = "Five" }
-                { Id = Guid.NewGuid(); Marked = false; DisplayText = "Six" }
-                { Id = Guid.NewGuid(); Marked = false; DisplayText = "Seven" }
-                { Id = Guid.NewGuid(); Marked = false; DisplayText = "Eight" }
-                { Id = Guid.NewGuid(); Marked = false; DisplayText = "Nine" }
+                line false "Zero"
+                line true "One"
+                line true "Two"
+                line false "Three"
+                line true "Four"
+                line true "Five"
+                line false "Six"
             ]
         }, Cmd.none
 
     let update msg m =
         match msg with
         | SetMarked (id, marked) ->
-            let lines =
-                m.Lines
-                |> List.map (fun line ->
-                    if line.Id = id then
-                        { line with Marked = marked }
-                    else
-                        line)
+            let lines = m.Lines |> List.map (fun line ->
+                if line.Id = id then { line with Marked = marked } else line)
             { m with Lines = lines }, Cmd.none
 
     let bindings () : Binding<Model, Msg> list =
         [
-            "Lines" |> Binding.subModelSeq((fun m -> m.Lines), (fun line -> line), fun () ->
+            "Lines" |> Binding.subModelSeq((fun m -> m.Lines), (fun line -> line.Id), fun () ->
                 [
                     "Id" |> Binding.oneWay (fun (_, line) -> line.Id)
-                    "Marked" |> Binding.twoWay (
-                        (fun (m, line) -> line.Marked),
-                        (fun marked (m, line) -> SetMarked (line.Id, marked))
-                        )
+                    "Marked" |> Binding.twoWay ((fun (m, line) -> line.Marked),
+                        (fun marked (m, line) -> SetMarked (line.Id, marked)))
                     "DisplayText" |> Binding.oneWay (fun (_, line) ->
                         line.DisplayText + (if line.Marked then " is checked" else " is not checked"))
                 ])
