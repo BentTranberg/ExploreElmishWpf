@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:ExploreElmishWpf"
              xmlns:model="clr-namespace:ExploreElmishWpf.Models;assembly=ExploreElmishWpf.Models"
              mc:Ignorable="d" 
-             d:DataContext="{x:Static model:CounterPane.designTimeModel}"
+             d:DataContext="{x:Static model:CounterDemo.designTimeModel}"
              d:DesignHeight="120" d:DesignWidth="500">
     <DockPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,25,0,0">
